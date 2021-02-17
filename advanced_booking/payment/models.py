@@ -1,25 +1,34 @@
 from django.db import models
+from movies.models import Movie
+from users.models import User
 
 
 # # Create your models here.
 
-#TODO: add fields for Cards
-
-# class Cards(models.Model):
-
-    # def __str__(self):
-    # return self.id
-
-
 class CardDetails(models.Model):
+    user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
     cardNumber: str = models.CharField(max_length=500, null=True)
-    first4Digit = models.IntegerField(null=True)
+    first4Digits = models.IntegerField(null=True)
     cardHolderFirstName = models.CharField(max_length=100, null=True)
     cardHolderLastName = models.CharField(max_length=100, null=True)
-    ExpireYear = models.IntegerField(max_length=2, null=True, help_text="Please input 2 digits YY")
-    ExpireMonth = models.IntegerField(max_length=2, null=True, help_text="Please input 2 digits MM")
+    ExpireYear = models.IntegerField(null=True, help_text="Please input 2 digits YY")
+    ExpireMonth = models.IntegerField(null=True, help_text="Please input 2 digits MM")
     date_created = models.DateTimeField(auto_now_add=True, null=True)
 
+    def __str__(self):
+        return str(self.id)
+
+
+class Ticket(models.Model):
+    # can grab movie related info from movie
+    movie = models.ForeignKey(Movie, null=True, on_delete=models.SET_NULL)
+    # to calculate ticket price use user's age
+    user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
+
+    # TODO: add seat model to it
+    # seat = models.ForeignKey(     , null=True, on_delete=models.SET_NULL)
+    def __str__(self):
+        return str(self.id)
 
 
 class Order(models.Model):
@@ -28,15 +37,17 @@ class Order(models.Model):
         ('Pending', 'Pending'),
         ('Succeed', 'Succeed'),
     )
-    #TODO: add related fields
+    # TODO: add related fields
+    # one order for one user and a card
+    user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
+    Card = models.ForeignKey(CardDetails, null=True, on_delete=models.SET_NULL)
 
-    # customer = models.ForeignKey(Customer, null=True, on_delete=models.SET_NULL)
-    # Movie= models.ForeignKey(Movie, null=True, on_delete=models.SET_NULL)
-    # Cards_id = models.ForeignKey(Cards, null=True, on_delete=models.SET_NULL)
+    # one order can have many tickets
+    tickets = models.ManyToManyField(Ticket)
+
     status = models.CharField(max_length=200, null=True, choices=STATUS)
     date_created = models.DateTimeField(auto_now_add=True, null=True)
+    amount = models.FloatField(null=True)
 
-    # note = models.CharField(max_length=1000, null=True)
-
-    # def __str__(self):
-    #     return self.product.name
+    def __str__(self):
+        return str(self.id)
