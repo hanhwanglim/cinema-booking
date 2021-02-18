@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Hall, Seat
+from .models import Hall, Seat, Showtime
 
 
 class HallInterface(admin.ModelAdmin):
@@ -20,5 +20,16 @@ class SeatInterface(admin.ModelAdmin):
     fieldsets = ()
 
 
+class ShowtimeInterface(admin.ModelAdmin):
+    list_display = ('__str__', 'movie', 'hall', 'time')
+    search_fields = ['movie__title', 'hall__name', 'time']
+    readonly_fields = ()
+
+    filter_horizontal = ()
+    list_filter = ()
+    fieldsets = ()
+
+
+admin.site.register(Showtime, ShowtimeInterface)
 admin.site.register(Hall)
 admin.site.register(Seat, SeatInterface)

@@ -1,5 +1,7 @@
 from django.db import models
 
+from movies.models import Movie
+
 
 class Hall(models.Model):
     # TODO we probably dont want this to be null
@@ -15,6 +17,7 @@ class Seat(models.Model):
         ('O', 'Seat Available'),
         ('*', 'Seat Being Booked')
     ]
+
     hall = models.ForeignKey(Hall, on_delete=models.CASCADE, null=False)
     row_number = models.PositiveSmallIntegerField()
     seat_number = models.PositiveSmallIntegerField()
@@ -23,3 +26,12 @@ class Seat(models.Model):
 
     def __str__(self):
         return f'Seat ({self.row_number}, {self.seat_number})'
+
+
+class Showtime(models.Model):
+    hall = models.ForeignKey(Hall, on_delete=models.CASCADE)
+    movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
+    time = models.DateTimeField(null=True)
+
+    def __str__(self):
+        return f'{self.movie} - {self.hall} ({self.time})'
