@@ -21,8 +21,8 @@ class CardDetails(models.Model):
 
 
 class Ticket(models.Model):
-    # to calculate ticket price use user's age
-    user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
+    # ticket holder age, might apply discount when adding to cart
+    age = models.IntegerField(null=True)
 
     seat = models.ForeignKey(Seat, null=True, on_delete=models.SET_NULL)
 
