@@ -7,7 +7,7 @@ from halls.models import Hall, Seat, Showtime
 
 # Register your models here.
 class TicketInterface(admin.ModelAdmin):
-    list_display = ('__str__', 'showtime', 'seat','age')
+    list_display = ('__str__', 'showtime', 'seat', 'age')
     search_fields = ['age', 'seat', 'showtime']
     readonly_fields = ()
     filter_horizontal = ()
@@ -31,9 +31,11 @@ class OrderInterface(admin.ModelAdmin):
     filter_horizontal = ()
     list_filter = ()
     fieldsets = ()
-    #print all tickets in list_display
+    
+    # print all tickets in list_display
     def get_tickets(self, obj):
         return ", ".join([str(p) for p in obj.tickets.all()])
+
 
 admin.site.register(Ticket, TicketInterface)
 admin.site.register(CardDetails, CardDetailsInterface)
