@@ -1,0 +1,13 @@
+{% if movie %}
+{{ movie.title }}
+{{ movie.director }}
+{{ movie.lead_actor }}
+{{ movie.certificate }}
+{{ movie.duration }}
+{{ movie.rating }}
+{{ movie.premier_date }}
+{{ movie.blurb}}
+
+{% else %}
+    <p>No movies found.</p>
+{% endif %}
