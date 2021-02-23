@@ -6,17 +6,6 @@ from django.test import TestCase
 from .models import User
 
 
-def create_user(email, username, password):
-    """
-    Create a new user with the given email, username and password.
-    """
-    return User.objects.create(
-        email=email,
-        username=username,
-        password=password
-    )
-
-
 class LoginViewTest(TestCase):
     def test_user_login(self):
         """
