@@ -6,6 +6,16 @@ from django.test import TestCase
 from .models import User
 
 
+def create_user(email, username, password):
+    user = User.objects.create(
+        email=email,
+        username=username
+    )
+    user.set_password(password)
+    user.save()
+    return user
+
+
 class LoginViewTest(TestCase):
     def test_user_login(self):
         """
@@ -18,12 +28,7 @@ class LoginViewTest(TestCase):
         test_user_email = 'user1@user1.com'
         test_user_name = 'user1'
         test_user_password = 'password123'
-        user = User.objects.create(
-            email=test_user_email, 
-            username=test_user_name, 
-        )
-        user.set_password(test_user_password)
-        user.save()
+        create_user(test_user_email, test_user_name, test_user_password)
 
         # Test when user keys in wrong password
         is_logged_in = self.client.login(email=test_user_email, password='wrongpassword')
@@ -68,3 +73,26 @@ class LoginViewTest(TestCase):
         is_logged_in = self.client.login(email=test_user_email, password=test_user_password)
         self.assertTrue(is_logged_in)
 
+
+class BookingViewTest(TestCase):
+    def test_booking_access(self):
+        """
+        The booking page should not be accessible if user is not logged in.
+        """
+        # Test no authenticated user
+        response = self.client.get(reverse('booking'), follow=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, '<title>Login</title>')
+
+        # Create test user
+        test_user_email = 'user1@user1.com'
+        test_user_name = 'user1'
+        test_user_password = 'password123'
+        create_user(test_user_email, test_user_name, test_user_password)
+        
+        # Test accessible when user logs in
+        is_logged_in = self.client.login(email=test_user_email, password=test_user_password)
+        self.assertTrue(is_logged_in)
+        user = User.objects.get(email=test_user_email)
+        response = self.client.get(reverse('booking'), {'user': user}, follow=True)
+        self.assertEqual(response.context['user'], user)
