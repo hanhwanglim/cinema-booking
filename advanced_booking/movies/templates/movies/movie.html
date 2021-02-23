@@ -2,12 +2,14 @@
 <html>
 <p>This is movie info page </p>
 
-{#<form method="post" novalidate>#}
-{#  {% csrf_token %}#}
-{#  {{ form }}#}
-{#  <button type="submit">Submit</button>#}
-{#</form>#}
+<!-- this is the datetime_form passed into html -->
+<form action="/your-name/" method="post">
+    {% csrf_token %}
+    {{ form }}
+    <input type="submit" value="Submit">
+</form>
 
+<!-- this is the movie info context, if it exits-->
 {% if movie %}
 {{ movie.title }}
 {{ movie.director }}
