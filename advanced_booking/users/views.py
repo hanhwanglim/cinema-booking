@@ -23,10 +23,8 @@ def register(request):
     
 def booking(request):
     if request.user.is_authenticated:
-        current_user = request.user
-        # print(Order.objects.get(user=1))  
+        current_user = request.user 
         user_order = Order.objects.filter(user=current_user)
-        print(user_order)
         context = {
             'user': current_user,
             'order': user_order
