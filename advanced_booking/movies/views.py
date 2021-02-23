@@ -14,7 +14,13 @@ def index(request):
 
 
 def movie(request, movie_id):
-    movie = Movie.objects.get(pk=movie_id)
+    try:
+        movie = Movie.objects.get(pk=movie_id)
+    except:
+        return index(request)
+
+
+
     context = {
         'movie': movie,
     }
