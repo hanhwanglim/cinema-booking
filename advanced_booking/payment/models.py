@@ -54,4 +54,4 @@ class Order(models.Model):
     amount = models.FloatField(null=True)
 
     def __str__(self):
-        return str(self.id)
+        return f'{self.id} - {self.status} '
