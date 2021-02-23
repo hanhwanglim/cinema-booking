@@ -4,8 +4,6 @@ from users.models import User
 from halls.models import Hall, Seat, Showtime
 
 
-# # Create your models here.
-
 class CardDetails(models.Model):
     user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
     cardNumber: str = models.CharField(max_length=500, null=True)
@@ -35,6 +33,14 @@ class Ticket(models.Model):
         return str(self.id)
 
 
+class ShoppingCart(models.Model):
+    user = models.ForeignKey(User, on_delete=models.RESTRICT)
+    ticket = models.ManyToManyField(Ticket)
+
+    def __str__(self):
+        return f'{self.user} - {self.ticket}'
+
+
 class Order(models.Model):
     STATUS = (
         ('Unpaid', 'Unpaid'),
@@ -49,9 +55,9 @@ class Order(models.Model):
     # one order can have many tickets
     tickets = models.ManyToManyField(Ticket)
 
-    status = models.CharField(max_length=200, null=True, choices=STATUS)
+    order_status = models.CharField(max_length=200, null=True, choices=STATUS)
     date_created = models.DateTimeField(auto_now_add=True, null=True)
     amount = models.FloatField(null=True)
 
     def __str__(self):
-        return f'{self.id} - {self.status} '
+        return f'{self.id} - {self.order_status}'
