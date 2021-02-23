@@ -24,10 +24,8 @@ def movie(request, movie_id):
 
         if form.is_valid():
             print("SelectDatetimeForm is valid")
-            selected_showtime = form.cleaned_data['selected_showtime']
-            # TODO: PASS showtime info to seat page.
-            # selected_showtime_id =
-            # return render("/")
+            selected_showtime_id = form.cleaned_data['selected_showtime']
+            return seat(request, showtime_id=selected_showtime_id)
         else:
             print(" Not a valid SelectDatetimeForm")
     else:
@@ -40,4 +38,13 @@ def movie(request, movie_id):
 
 
 def seat(request, showtime_id):
-    pass
+    context = {
+
+    }
+
+    showtime = Showtime.objects.get(pk=showtime_id)
+
+    movie = showtime.movie
+    hall = showtime.hall
+
+    return render(request, 'movies/seat.html', context)

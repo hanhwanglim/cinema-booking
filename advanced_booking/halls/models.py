@@ -35,3 +35,6 @@ class Showtime(models.Model):
 
     def __str__(self):
         return f'{self.movie} - {self.hall} ({self.time})'
+
+    def get_id(self):
+        return self.id
