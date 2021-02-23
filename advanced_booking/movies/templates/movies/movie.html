@@ -1,3 +1,13 @@
+<!DOCTYPE html>
+<html>
+<p>This is movie info page </p>
+
+{#<form method="post" novalidate>#}
+{#  {% csrf_token %}#}
+{#  {{ form }}#}
+{#  <button type="submit">Submit</button>#}
+{#</form>#}
+
 {% if movie %}
 {{ movie.title }}
 {{ movie.director }}
@@ -11,3 +21,5 @@
 {% else %}
     <p>No movies found.</p>
 {% endif %}
+
+</html>

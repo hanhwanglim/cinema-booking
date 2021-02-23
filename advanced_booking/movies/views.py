@@ -1,6 +1,6 @@
 from django.http import HttpResponse
 from django.shortcuts import render
-
+from payment.forms import SelectDatetimeForm, TestForm
 from .models import Movie
 
 
@@ -17,4 +17,19 @@ def movie(request, movie_id):
     context = {
         'movie': movie,
     }
-    return render(request, 'movies/movie.html', context)
+
+    if request.method == 'POST':
+        form = SelectDatetimeForm(request.POST
+                                  ,movie_id=1
+                                  )
+        if form.is_valid():
+            print("SelectDatetimeForm is valid")
+            return render("/")
+        else:
+            print(" Not a valid SelectDatetimeForm")
+
+    else:
+        form=SelectDatetimeForm()
+    return render(request, 'movies/movie.html', context
+                  ,{'form': form}
+                  )
