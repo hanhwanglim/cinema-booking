@@ -32,3 +32,6 @@ def booking(request):
         return render(request, 'users/booking.html', context)
     return redirect(reverse('login'))
     
+def login(request):
+    form = RegisterForm()
+    return render(request, 'users/login.html',{'form': form})
