@@ -129,3 +129,4 @@ STATIC_URL = '/static/'
 CART_SESSION_KEY = 'cart_session'
 
 LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'

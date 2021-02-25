@@ -11,7 +11,7 @@ class HallInterface(admin.ModelAdmin):
 
 
 class SeatInterface(admin.ModelAdmin):
-    list_display = ('__str__', 'hall', 'row_number', 'seat_number', 'vip', 'status')
+    list_display = ('__str__', 'hall', 'showtime', 'row_number', 'seat_number', 'vip', 'status')
     search_fields = ['hall__name', 'row_number', 'seat_number']
     readonly_fields = ()
 
