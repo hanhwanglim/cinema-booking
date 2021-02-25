@@ -1,0 +1,49 @@
+{% load static %}
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <title>Login</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'users/main.css' %}">
+</head>
+
+<body>
+    <ul>
+        <li><a href="#">Home</a></li>
+        <li><a href="#">News</a></li>
+        <li><a href="#">Contact</a></li>
+        <li><a href="#">About</a></li>
+    </ul>
+    <div class="wrapper">
+        <div class="userdetails1">
+            <div class="registercontainer1">
+                <h1 class="signintitle">Sign in</h1>
+                <form method="POST">
+                    {% csrf_token %}
+                    {{ form.errors }}
+                    <fieldset class="form-group">
+                        <legend class="border-bottom mb-4"></legend>
+                        <p>Email</p>
+                        {{ form.username }}
+                        <p>Password</p>
+                        {{ form.password }}
+                    </fieldset>
+                    <div class="formgroup">
+                        <button class="btn btn-outline-info" type="submit">Login</button>
+                    </div>
+                </form>
+                <div class="border-top pt-3">
+                    <small class="text-muted">
+                        <br>
+                        Already have an account? <a class="signinlink" href="/users">Sign in</a>
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br>
+    </div>
+</body>
+
+</html>

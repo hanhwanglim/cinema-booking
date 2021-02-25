@@ -1,0 +1,11 @@
+<title>Home</title>
+
+{% if movie_list %}
+    <ul>
+    {% for movie in movie_list %}
+        <li>{{ movie }}</li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No movies are available.</p>
+{% endif %}
