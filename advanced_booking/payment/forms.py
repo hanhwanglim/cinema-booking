@@ -1,6 +1,6 @@
 from django import forms
 from movies.models import Movie
-from halls.models import Showtime
+from halls.models import Showtime, Seat
 
 
 class SelectDatetimeForm(forms.Form):
@@ -21,10 +21,10 @@ class SelectDatetimeForm(forms.Form):
                 choices=tuple([(a_time.id, a_time) for a_time in available_datetime]))
 
 
-class SeatForm(forms.Form):
+class SelectSeatForm(forms.Form):
     def __init__(self, *args, **kwargs):
         showtime_id = kwargs.pop('showtime_id', None)
-        super(SelectDatetimeForm, self).__init__(*args, **kwargs)
+        super(SelectSeatForm, self).__init__(*args, **kwargs)
 
         # use showtime to grab all available seats
         if showtime_id:

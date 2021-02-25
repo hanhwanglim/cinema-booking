@@ -1,6 +1,6 @@
 from django.http import HttpResponse
-from django.shortcuts import render
-from payment.forms import SelectDatetimeForm
+from django.shortcuts import render, redirect
+from payment.forms import SelectDatetimeForm, SelectSeatForm
 from .models import Movie
 from halls.models import Showtime
 
@@ -26,12 +26,12 @@ def movie(request, movie_id):
     }
 
     if request.method == 'POST':
-        form = SelectDatetimeForm(request.POST, movie_id=1)
+        form = SelectDatetimeForm(request.POST, movie_id=movie_id)
 
         if form.is_valid():
             print("SelectDatetimeForm is valid")
             selected_showtime_id = form.cleaned_data['selected_showtime']
-            return seat(request, showtime_id=selected_showtime_id)
+            return redirect('seat', showtime_id=selected_showtime_id)
         else:
             print(" Not a valid SelectDatetimeForm")
     else:
@@ -47,10 +47,28 @@ def seat(request, showtime_id):
     context = {
 
     }
+    if showtime_id:
+        if request.method == 'POST':
+            form = SelectSeatForm(request.POST, showtime_id=showtime_id)
+
+            if form.is_valid():
+                print("SelectSeatForm is valid")
+                selected_seat_id = form.cleaned_data['selected_seats']
+                ##TODO: redirect to Cart page.
+                return redirect('index')
+            else:
+                print(" Not a valid SelectDatetimeForm")
+        else:
+            # create a Datatime form for the current page movie
+            form = SelectSeatForm(showtime_id=showtime_id)
+            # add form to conext
+            context['form'] = form
 
     showtime = Showtime.objects.get(pk=showtime_id)
-
     movie = showtime.movie
     hall = showtime.hall
 
+    #TODO: add required info for front-end
+    context['movie'] = movie
+    context['hall'] = hall
     return render(request, 'movies/seat.html', context)
