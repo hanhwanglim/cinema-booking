@@ -1,3 +1,15 @@
+<!DOCTYPE html>
+<html>
+<p>This is movie info page </p>
+
+<!-- this is the datetime_form passed into html -->
+<form action="" method="post">
+    {% csrf_token %}
+    {{ form }}
+    <input type="submit" value="Submit">
+</form>
+
+<!-- this is the movie info context, if it exits-->
 {% if movie %}
 {{ movie.title }}
 {{ movie.director }}
@@ -11,3 +23,5 @@
 {% else %}
     <p>No movies found.</p>
 {% endif %}
+
+</html>
