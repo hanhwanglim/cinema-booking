@@ -1,47 +1,55 @@
 {% load static %}
 <!DOCTYPE html>
-<link rel="stylesheet" type="text/css" href="{% static 'users/main.css' %}">
-<html>
-    <head>
-        <link rel="stylesheet" type="text/css" href="{% static 'users/main.css' %}">
-    </head>
+<html lang="en">
+
+<head>
+    <title>Register</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'users/main.css' %}">
+</head>
+
 <body>
     <ul>
         <li><a href="#">Home</a></li>
         <li><a href="#">News</a></li>
         <li><a href="#">Contact</a></li>
         <li><a href="#">About</a></li>
-    </ul> 
+    </ul>
     <div class="wrapper">
-        <div class ="userdetails2">
-        <div class = "registercontainer">
-            <h1 class = "signintitle">Create Account</h1>
-            <form method ="POST">
-                {% csrf_token %}
-                <fieldset class="form-group">
-                    <legend class="border-bottom mb-4">Register</legend>
-                    <p>Email</p>
-                    {{ form.email }}
-                    <p>User Name</p>
-                    {{ form.username }}
-                    <p>Password</p>
-                    {{ form.password1 }}
-                    <p>Confirm Password</p>
-                    {{ form.password2 }}
-                </fieldset>
-                <div class="formgroup">
-                    <button class="btn btn-outline-info" type="submit"> Sign up</button>
+        <div class="userdetails2">
+            <div class="registercontainer">
+                <h1 class="signintitle">Create Account</h1>
+                <form method="POST">
+                    {% csrf_token %}
+                    {{ error_message }}
+                    <fieldset class="form-group">
+                        <legend class="border-bottom mb-4">Register</legend>
+                        <p>Email</p>
+                        {{ form.email }}
+                        <p>User Name</p>
+                        {{ form.username }}
+                        <p>Password</p>
+                        {{ form.password1 }}
+                        <p>Confirm Password</p>
+                        {{ form.password2 }}
+                        <p>Birthday</p>
+                        {{ form.birthday }}
+                        <p>Accept terms of service</p>
+                        {{ form.accept_tos }}
+                    </fieldset>
+                    <div class="formgroup">
+                        <button class="btn btn-outline-info" type="submit"> Sign up</button>
+                    </div>
+                </form>
+                <div class="border-top pt-3">
+                    <small class="text-muted">
+                        Already have an account? <a class="signinlink" href="/users">Sign in</a>
+                    </small>
                 </div>
-            </form>
-            <div class="border-top pt-3">
-                <small class="text-muted">
-                    Already have an account? <a class="signinlink" href="/users">Sign in</a>
-                </small>
             </div>
         </div>
-        </div>
-        </div>
-        <br>
+    </div>
+    <br>
     </div>
 </body>
+
 </html>
