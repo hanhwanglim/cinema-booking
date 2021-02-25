@@ -1,16 +1,18 @@
 from datetime import date, datetime
 from django.urls import reverse
-from django.test import TestCase,SimpleTestCase
+from django.test import TestCase, SimpleTestCase
 from .models import Movie
-from halls.models import Showtime,Hall
+from halls.models import Showtime, Hall
+
 
 def create_hall():
     """
     Create a new hall
     """
     return Hall.objects.create(
-        name ="screen1"
+        name="screen1"
     )
+
 
 def create_movie(title):
     """
@@ -26,15 +28,17 @@ def create_movie(title):
         premier_date=date(2020, 1, 1)
     )
 
-def create_showtime(hall,movie):
+
+def create_showtime(hall, movie):
     """
     Create a new showtime with the given hall and movie.
     """
     return Showtime.objects.create(
         hall=hall,
         movie=movie,
-        time =datetime.now()
+        time=datetime.now()
     )
+
 
 class MovieViewTests(TestCase):
     def test_movie_empty_index_page(self):
@@ -69,7 +73,7 @@ class MovieViewTests(TestCase):
         for i in range(3):
             create_movie(f'Title of Movie {i + 1}')
 
-        response = self.client.get(reverse('movie',args=[2]))
+        response = self.client.get(reverse('movie', args=[2]))
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, f'Title of Movie {2}')
         self.assertNotContains(response, f'Title of Movie {1}')
@@ -78,10 +82,16 @@ class MovieViewTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, f'Title of Movie {1}')
 
-    def test_movie_info_form(self):
+    def test_seat_form(self):
 
+        """
+        this tests if the seat page can be rendered
+        """
         show = create_showtime(create_hall(), create_movie(f'Title of Movie 1'))
 
         response = self.client.get(reverse('seat', args=[show.id]))
 
         self.assertEqual(response.status_code, 200)
+        self.assertContains(response, f'seat')
+
+        # TODO: write a test that can check if the route is correct
