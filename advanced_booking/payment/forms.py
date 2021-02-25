@@ -26,7 +26,10 @@ class SeatForm(forms.Form):
         showtime_id = kwargs.pop('showtime_id', None)
         super(SelectDatetimeForm, self).__init__(*args, **kwargs)
 
-        #TODO: use showtime to grab all available seats
+        # use showtime to grab all available seats
         if showtime_id:
-            # available_seats =
-            pass
+            available_seats = Seat.objects.all().filter(showtime_id=showtime_id)
+            self.fields['selected_seats'] = forms.ChoiceField(
+                choices=tuple([(a_seat, a_seat) for a_seat in available_seats]))
+
+
