@@ -16,13 +16,22 @@
         <li><a href="#">About</a></li>
     </ul>
     {% if movie %}
-
-    <hr> {{ movie.lead_actor }}
-    <hr> {{ movie.certificate }}
-    <hr> {{ movie.duration }}
-    <hr> {{ movie.rating }}
-    <hr> {{ movie.premier_date }}
-    <hr> {{ movie.blurb}} {% else %}
+    <p class="movieclicked">
+        {{ movie.title }} </p>
+    <hr>
+    <p class="movieclicked"> {{ movie.director }} </p>
+    <hr>
+    <p class="movieclicked"> {{ movie.lead_actor }} </p>
+    <hr>
+    <p class="movieclicked"> {{ movie.certificate }} </p>
+    <hr>
+    <p class="movieclicked"> {{ movie.duration }} </p>
+    <hr>
+    <p class="movieclicked"> {{ movie.rating }} </p>
+    <hr>
+    <p class="movieclicked"> {{ movie.premier_date }} </p>
+    <hr>
+    <p class="movieclicked"> {{ movie.blurb}} </p> {% else %}
     <p>No movies found.</p>
     </p>
     {% endif %}
