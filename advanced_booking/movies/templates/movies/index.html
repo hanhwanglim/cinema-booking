@@ -10,7 +10,7 @@
 
 <body>
     <ul class="navbar">
-        <li><a href="#">Home</a></li>
+        <li><a href="">Home</a></li>
         <li><a href="#">News</a></li>
         <li><a href="#">Contact</a></li>
         <li><a href="#">About</a></li>
@@ -19,15 +19,16 @@
     {% if movie_list %}
     <ul class="topmovies">
         {% for movie in movie_list %}
-        <div class="moviepos">
-            <div class="moviepos2">
-                <li class="movielist">
-                    <img width="auto" height="100%" src="https://m.media-amazon.com/images/I/71tUSFn3W0L._AC_SL1000_.jpg">
-                </li>
-
+        <a class="movielinkpost" href="{% url 'movie' movie.id %}">
+            <div class="moviepos">
+                <div class="moviepos2">
+                    <li class="movielist">
+                        <img width="auto" height="100%" src="https://m.media-amazon.com/images/I/71tUSFn3W0L._AC_SL1000_.jpg">
+                    </li>
+                    <p class="moviename">{{ movie }}</p>
+                </div>
             </div>
-        </div>
-
+        </a>
         {% endfor %}
     </ul>
     {% else %}
