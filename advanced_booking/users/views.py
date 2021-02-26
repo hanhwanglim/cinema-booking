@@ -33,5 +33,14 @@ def booking(request):
     return redirect(reverse('login'))
     
 def login(request):
-    form = RegisterForm()
-    return render(request, 'users/login.html',{'form': form})
+    if request.method == 'POST':
+        form = RegisterForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('login')
+    else:
+        form = RegisterForm()
+        context = {
+            'form': form
+        }
+        return render(request, 'users/login.html', context)
