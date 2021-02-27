@@ -20,6 +20,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('movies.urls')),
     path('movie/<int:movie_id>/', include('movies.urls')),
+    path('movie/choose_your_seat/<int:showtime_id>/', include('movies.urls')),
+    path('cart/checkout',include('payment.urls')),
     path('register', include('users.urls')),
     path('booking', include('users.urls')),
     path('', include('django.contrib.auth.urls')),

@@ -7,10 +7,10 @@ from creditcards.models import CardNumberField, CardExpiryField, SecurityCodeFie
 
 class CardDetails(models.Model):
     user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
-    number = CardNumberField(_('card number'))
+    number = CardNumberField('card number')
     first4Digits = models.IntegerField(null=True)
     name = models.CharField(max_length=100, null=True)
-    expiry = CardExpiryField(_('expiration date'))
+    expiry = CardExpiryField('expiration date')
 
     def __str__(self):
         return str(self.number)
