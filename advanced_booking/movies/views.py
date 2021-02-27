@@ -31,7 +31,7 @@ def movie(request, movie_id):
         if form.is_valid():
             print("SelectDatetimeForm is valid")
             selected_showtime_id = form.cleaned_data['selected_showtime']
-            return redirect('seat', showtime_id=selected_showtime_id)
+            return redirect('seat', selected_showtime_id)
         else:
             print(" Not a valid SelectDatetimeForm")
     else:
@@ -48,6 +48,13 @@ def seat(request, showtime_id):
 
     }
     if showtime_id:
+        showtime = Showtime.objects.get(pk=showtime_id)
+        movie = showtime.movie
+        hall = showtime.hall
+
+        #TODO: add required info for front-end
+        context['movie'] = movie
+        context['hall'] = hall
         if request.method == 'POST':
             form = SelectSeatForm(request.POST, showtime_id=showtime_id)
 
@@ -64,11 +71,5 @@ def seat(request, showtime_id):
             # add form to conext
             context['form'] = form
 
-    showtime = Showtime.objects.get(pk=showtime_id)
-    movie = showtime.movie
-    hall = showtime.hall
 
-    #TODO: add required info for front-end
-    context['movie'] = movie
-    context['hall'] = hall
     return render(request, 'movies/seat.html', context)
