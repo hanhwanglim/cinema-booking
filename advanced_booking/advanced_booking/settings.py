@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'users',
     'movies',
     'halls',
+    'cart',
     'payment',
     'django.contrib.admin',
     'django.contrib.auth',
