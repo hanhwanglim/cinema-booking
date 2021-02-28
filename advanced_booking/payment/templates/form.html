@@ -6,12 +6,12 @@
 </head>
 <body>
 
-<h1>{{ % title % }}</h1>
+<h1>{{ title }}</h1>
 
-<form action="{% action %}" method="POST">
+<form action="{{ action }}" method="POST">
 	{% csrf_token %}
 	{{ form }}
-	<button type="submit"></button>
+	<button type="submit">{{ buttonText }}</button>
 
 
 </body>
