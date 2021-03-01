@@ -39,8 +39,3 @@ def booking(request):
         }
         return render(request, 'users/booking.html', context)
     return redirect(reverse('login'))
-
-
-# class LoginView(views.LoginView):
-#     form_class = LoginForm
-#     template_name = 'accounts/login.html'
