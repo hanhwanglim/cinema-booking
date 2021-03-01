@@ -1,4 +1,4 @@
-from datetime import date, datetime
+from datetime import date, datetime, timezone
 from django.urls import reverse
 from django.test import TestCase, SimpleTestCase
 from .models import Movie
@@ -29,14 +29,14 @@ def create_movie(title):
     )
 
 
-def create_showtime(hall, movie):
+def create_showtime(hall, movie, showtime):
     """
     Create a new showtime with the given hall and movie.
     """
     return Showtime.objects.create(
         hall=hall,
         movie=movie,
-        time=datetime.now()
+        time=showtime
     )
 
 
@@ -66,10 +66,10 @@ class MovieViewTests(TestCase):
         self.assertEqual(len(response.context['movie_list']), 3)
 
     def test_movie_info_page(self):
-        '''
+        """
          a movie info page should be able to access in every situation
          (if can't query fallback to index page)
-        '''
+        """
         for i in range(3):
             create_movie(f'Title of Movie {i + 1}')
 
@@ -83,11 +83,14 @@ class MovieViewTests(TestCase):
         self.assertContains(response, f'Title of Movie {1}')
 
     def test_seat_form(self):
-
         """
         this tests if the seat page can be rendered
         """
-        show = create_showtime(create_hall(), create_movie(f'Title of Movie 1'))
+        show = create_showtime(
+            create_hall(),
+            create_movie(f'Title of Movie 1'),
+            datetime(2021, 1, 1, 12, 0, 0, 0, timezone.utc)
+        )
 
         response = self.client.get(reverse('seat', args=[show.id]))
 
