@@ -61,6 +61,7 @@ def seat(request, showtime_id):
             if form.is_valid():
                 print("SelectSeatForm is valid")
                 selected_seat_id = form.cleaned_data['selected_seats']
+                ticket_type = form.cleaned_data['ticket_type']
                 ##TODO: redirect to Cart page.
                 return redirect('index')
             else:
@@ -73,3 +74,4 @@ def seat(request, showtime_id):
 
 
     return render(request, 'movies/seat.html', context)
+

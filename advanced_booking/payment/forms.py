@@ -1,28 +1,27 @@
-#pip install django-credit-cards needed !!!!!!
+# pip install django-credit-cards needed !!!!!!
 from django import forms
 from movies.models import Movie
 from halls.models import Showtime, Seat
 from creditcards.forms import CardNumberField, CardExpiryField, SecurityCodeField
 
+
 class PaymentForm(forms.Form):
     number = CardNumberField(label='Card Number')
     expiryDate = CardExpiryField(label='Expiration Date')
     securityCode = SecurityCodeField(label='CVV/CVC')
-    name=forms.CharField(label="Name",error_messages={'required': 'Please enter the name written on your card.'})
+    name = forms.CharField(label="Name", error_messages={'required': 'Please enter the name written on your card.'})
 
 
 class SelectDatetimeForm(forms.Form):
-    #FIXME: Don't know if we must have this part
-    class Meta:
-        # fields = ('movie_id', 'selected_showtime')
-        # movie_id = forms.IntegerField()
-        pass
+    """
+    This form provides a datetime choice field for a ticket
+    """
 
     def __init__(self, *args, **kwargs):
-        movie_id=kwargs.pop('movie_id',None )
+        movie_id = kwargs.pop('movie_id', None)
         super(SelectDatetimeForm, self).__init__(*args, **kwargs)
 
-        #use movie_id to query available_datetime
+        # use movie_id to query available_datetime
         if movie_id:
             available_datetime = Showtime.objects.all().filter(movie_id=movie_id)
             self.fields['selected_showtime'] = forms.ChoiceField(
@@ -30,6 +29,10 @@ class SelectDatetimeForm(forms.Form):
 
 
 class SelectSeatForm(forms.Form):
+    """
+    This form provides a seat choice field and a age choice field for a ticket
+    """
+
     def __init__(self, *args, **kwargs):
         showtime_id = kwargs.pop('showtime_id', None)
         super(SelectSeatForm, self).__init__(*args, **kwargs)
@@ -40,4 +43,11 @@ class SelectSeatForm(forms.Form):
             self.fields['selected_seats'] = forms.ChoiceField(
                 choices=tuple([(a_seat, a_seat) for a_seat in available_seats]))
 
+    # add
+    AGE_CHOICES = (
+        ("Child", "Child(Under 16)"),
+        ("Adult", "Adult(17-64)"),
+        ("Senior", "Senior(Over 65)"),
+    )
 
+    ticket_type = forms.ChoiceField(choices=AGE_CHOICES)
