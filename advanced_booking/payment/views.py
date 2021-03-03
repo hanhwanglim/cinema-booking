@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from .forms import PaymentForm
 from django.http import HttpResponse
-from movies.models import Movie, Ticket
+from movies.models import Movie
 from halls.models import Showtime
 from .models import Ticket, Order
 
