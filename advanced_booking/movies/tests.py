@@ -98,3 +98,6 @@ class MovieViewTests(TestCase):
         self.assertContains(response, f'seat')
 
         # TODO: write a test that can check if the route is correct
+
+
+

@@ -7,8 +7,8 @@ from halls.models import Hall, Seat, Showtime
 
 # Register your models here.
 class TicketInterface(admin.ModelAdmin):
-    list_display = ('__str__', 'showtime', 'seat', 'age')
-    search_fields = ['age', 'seat', 'showtime']
+    list_display = ('__str__', 'showtime', 'seat', 'type')
+    search_fields = ['type', 'seat', 'showtime']
     readonly_fields = ()
     filter_horizontal = ()
     list_filter = ()

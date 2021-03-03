@@ -30,7 +30,7 @@ class SelectDatetimeForm(forms.Form):
 
 class SelectSeatForm(forms.Form):
     """
-    This form provides a seat choice field and a age choice field for a ticket
+    This form provides a SEAT choice field and a AGE choice field for a ticket
     """
 
     def __init__(self, *args, **kwargs):
