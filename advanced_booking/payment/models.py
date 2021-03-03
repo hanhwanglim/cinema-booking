@@ -38,14 +38,15 @@ class Ticket(models.Model):
     seat = models.ForeignKey(Seat, null=True, on_delete=models.SET_NULL)
 
     AGE_CHOICES = (
-        ("Child", "Child(Under 16)"),
-        ("Adult", "Adult(17-64)"),
-        ("Senior", "Senior(Over 65)"),
+        ("CHILD", "Child(Under 16)"),
+        ("ADULT", "Adult(17-64)"),
+        ("SENIOR", "Senior(Over 65)"),
     )
+
     type = models.CharField(
         max_length = 100,
         choices=AGE_CHOICES,
-        default="Adult",
+        default="ADULT",
     )
 
     # can query time, hall and movie info from showtime

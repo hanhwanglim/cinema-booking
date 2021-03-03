@@ -6,41 +6,62 @@ from halls.models import Showtime
 from .models import Ticket, Order, ShoppingCart
 
 
-# Create your views here.
 def create_new_ticket(seat_id, showtime_id, ticket_type):
-    '''
+    """
     create a ticket
-    '''
+    """
     if seat_id and showtime_id and ticket_type:
         # create a new ticket
+        print("ticket_type is:")
+        print(ticket_type)
         new_ticket = Ticket.objects.create(seat_id=seat_id, showtime_id=showtime_id, type=ticket_type)
         return new_ticket
 
 
-def add_to_cart(seat_id, showtime_id, ticket_type, user):
-    '''
+# cart functions  #
+def add_to_cart(request, seat_id, showtime_id, ticket_type):
+    """
     create a ticket and add it to user's shopping cart.
     If current user doesn't have cart, create it first and add ticket to it.
 
-    return true:  if the passing args are valid
-    return false : passing args has empty values
-    '''
-    if seat_id and showtime_id and ticket_type and user:
-        # create a new ticket
-        new_ticket = create_new_ticket(seat_id, showtime_id, ticket_type)
-        if ShoppingCart.objects.filter(user=user).first():
-            cart = ShoppingCart.objects.get(user=user)
-            cart.ticket.add(new_ticket)
-        else:
-            cart = ShoppingCart.objects.create(user=user)
-            cart.ticket.add(new_ticket)
-        cart.save()
+    return to the cart page
+    """
 
-        return True
+    if request.user.is_authenticated:
+        if seat_id and showtime_id and ticket_type:
+            # create a new ticket
+            print("ticket_type is:")
+            print(ticket_type)
+            new_ticket = create_new_ticket(seat_id, showtime_id, ticket_type)
+            if ShoppingCart.objects.filter(user=request.user).first():
+                cart = ShoppingCart.objects.get(user=request.user)
+                cart.ticket.add(new_ticket)
+            else:
+                cart = ShoppingCart.objects.create(user=request.user)
+                cart.ticket.add(new_ticket)
+            cart.save()
+            return redirect('cart')
+        else:
+            print("Can't create ticket due to null values")
+            return redirect('index')
     else:
-        print("Can't create a new ticket")
-        return False
-        # return redirect('index')
+        print("Error:Unauthenticated user!")
+        return redirect('index')
+
+
+##cart view ###
+def remove_from_cart(request, ticket_id):
+    if request.user.is_authenticated:
+        current_user = request.user
+        # query the cart
+        cart = ShoppingCart.objects.get(user=current_user)
+        ticket = Ticket.objects.get(id=ticket_id)
+        cart.ticket.remove(ticket)
+        cart.save()
+        return redirect('cart')
+    else:
+        print("Error: failed to remove ticket from cart")
+        return redirect('index')
 
 
 def cart(request):
@@ -63,18 +84,7 @@ def cart(request):
         return redirect('index')
 
 
-def remove_from_cart(user, ticket_id):
-    if user.is_authenticated:
-        current_user = user
-        # query the cart
-        cart = ShoppingCart.objects.get(user=current_user)
-        ticket = Ticket.objects.get(id=ticket_id)
-        cart.ticket.remove(ticket)
-        cart.save()
-        return True
-    else:
-        False
-
+# cart function  ends... #
 
 def checkout(request):
     if request.method == 'POST':

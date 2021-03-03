@@ -67,11 +67,10 @@ def seat(request, showtime_id):
                 if request.user.is_authenticated:
                     current_user = request.user
                     #create ticket and add to cart
-                    if add_to_cart(selected_seat_id, showtime_id, ticket_type, current_user):
-                        print ("successfully created a ticket and added to cart")
-                        return redirect('cart')
-                    else:
-                        print("Can't create ticket due to null values")
+                    print("successfully created a ticket and added to cart")
+                    return redirect(add_to_cart, seat_id=selected_seat_id, showtime_id=showtime_id,
+                                    ticket_type= ticket_type)
+
                 else:
                     return redirect('index')
             else:

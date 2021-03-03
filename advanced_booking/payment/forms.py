@@ -41,7 +41,7 @@ class SelectSeatForm(forms.Form):
         if showtime_id:
             available_seats = Seat.objects.all().filter(showtime_id=showtime_id)
             self.fields['selected_seats'] = forms.ChoiceField(
-                choices=tuple([(a_seat, a_seat) for a_seat in available_seats]))
+                choices=tuple([(a_seat.id, a_seat) for a_seat in available_seats]))
 
     # add
     AGE_CHOICES = (
