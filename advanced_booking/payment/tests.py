@@ -25,7 +25,7 @@ class MovieViewTests(TestCase):
         )
         # created ticket has default type :adult
         ticket = Ticket.objects.create(seat_id=1, showtime=show)
-        test_ticket = create_new_ticket(1, show.id, "Adult")
+        test_ticket = create_new_ticket(1, show.id, "ADULT")
 
         self.assertEqual(ticket.showtime, test_ticket.showtime)
         self.assertEqual(ticket.seat_id, test_ticket.seat_id)
