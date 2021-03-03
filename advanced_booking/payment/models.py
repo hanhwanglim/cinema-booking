@@ -30,10 +30,24 @@ class CardDetails(models.Model):
 
 
 class Ticket(models.Model):
-    # ticket holder age, might apply discount when adding to cart
-    age = models.IntegerField(null=True)
 
+
+
+    # ticket holder age, might apply discount when adding to cart
+    # age = models.IntegerField(null=True)
     seat = models.ForeignKey(Seat, null=True, on_delete=models.SET_NULL)
+
+    AGE_CHOICES = (
+        ("CHILD", "Child(Under 16)"),
+        ("ADULT", "Adult(17-64)"),
+        ("SENIOR", "Senior(Over 65)"),
+    )
+
+    type = models.CharField(
+        max_length = 100,
+        choices=AGE_CHOICES,
+        default="ADULT",
+    )
 
     # can query time, hall and movie info from showtime
     showtime = models.ForeignKey(Showtime, null=True, on_delete=models.SET_NULL)

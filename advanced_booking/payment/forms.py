@@ -30,7 +30,7 @@ class SelectDatetimeForm(forms.Form):
 
 class SelectSeatForm(forms.Form):
     """
-    This form provides a seat choice field and a age choice field for a ticket
+    This form provides a SEAT choice field and a AGE choice field for a ticket
     """
 
     def __init__(self, *args, **kwargs):
@@ -41,7 +41,7 @@ class SelectSeatForm(forms.Form):
         if showtime_id:
             available_seats = Seat.objects.all().filter(showtime_id=showtime_id)
             self.fields['selected_seats'] = forms.ChoiceField(
-                choices=tuple([(a_seat, a_seat) for a_seat in available_seats]))
+                choices=tuple([(a_seat.id, a_seat) for a_seat in available_seats]))
 
     # add
     AGE_CHOICES = (
