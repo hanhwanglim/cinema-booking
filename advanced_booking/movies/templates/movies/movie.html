@@ -1,54 +1,55 @@
 {% extends 'movies/base.html' %}
 
 {% block content %}
-
-<!DOCTYPE html>
-<html>
+ 
 <p>This is movie info page </p>
 
-
+ 
 <!--
 <button type="button" class="btn btn-outline-success">{{ movie.title }}</button>
 <button type="button" class="btn btn-outline-danger">Danger</button>
 -->
-<div class="container -fluid">
+<div class="container">
     <div class="row">
         <div class = "col-lg-6">
-            <img src="https://upload.wikimedia.org/wikipedia/en/c/c7/Batman_Infobox.jpg"  class= "img-responsive mx-auto d-block" alt="The Dark Night">
+            <img src="https://upload.wikimedia.org/wikipedia/en/c/c7/Batman_Infobox.jpg"  class= "img-responsive mx-auto d-block"  alt="The Dark Night" >
         </div>
-        
-        <div class = "col-lg-6 bg-primary">
+        <div class = "col-lg-6">
             <div class="row">
-                <span class="border border-dark">
-                    <div class = "col-12 bg-white">
-                        <!-- this is the movie info context, if it exits-->
-                        {% if movie %}
-                            <h1>{{ movie.title }}</h1> 
-                            <p>{{ movie.blurb}}</p> 
-                            Certificate: {{ movie.certificate }}<br> 
-                            Director: {{ movie.director }}<br>
-                            Lead Actors: {{ movie.lead_actor }}<br> 
-                            Rating: {{ movie.rating }}<br>
-                            Duration: {{ movie.duration }}<br> 
-                            Premier Date: {{ movie.premier_date }}<br>
-                        {% else %}
-                            <p>No movies found.</p>
-                        {% endif %}
-                    </div>
-                </span>
-                <span class="border border-dark">
-                    <div class = "col-12 bg-white">
-                        <!-- this is the datetime_form passed into html -->
-                        <form action="" method="post">
-                            <h1>Dates & Times</h1>
-                            {% csrf_token %}
-                            {{ form }}
-                            <input type="submit" value="Submit">
-                        </form>
-                    </div>
-                </span>
+                <div class = "col-lg-12">
+                    <!-- this is the movie info context, if it exits-->
+                    {% if movie %}
+                        <h1>{{ movie.title }}</h1> 
+                        <h6>{{ movie.certificate }}</h6>
+                        <p>{{ movie.blurb}}</p> 
 
-        
+                        <hr class="rounded">
+                        
+                        <h6>Rated: {{ movie.rating }}/10</h6> 
+
+                        <hr class="rounded">
+
+                        <h5>Director:</h5> 
+                        {{ movie.director }}
+                        <h5>Lead Actors:</h5> 
+                        {{ movie.lead_actor }}
+                        <h5>Duration:</h5> 
+                        {{ movie.duration }} minutes
+                        <h5>Premier Date:</h5> 
+                        {{ movie.premier_date }}
+                    {% else %}
+                        <p>No movies found.</p>
+                    {% endif %}
+                </div>
+                <div class = "col-lg-12">
+                    <!-- this is the datetime_form passed into html -->
+                    <form action="" method="post">
+                        <h1>Dates & Times</h1>
+                        {% csrf_token %}
+                        {{ form }}
+                        <input type="submit" value="Submit">
+                    </form>
+                </div>
             </div>
         </div>
         
@@ -57,10 +58,6 @@
 </div>
 
 
-
-
-
-
+ 
 </html>
 {% endblock %}
-
