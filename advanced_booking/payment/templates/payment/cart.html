@@ -8,8 +8,12 @@
 
 <h1> This is shopping cart page. This page should show the cart and the checkout button</h1>
 
-{{ cart.ticket.type }}
-{#{{ tickets[0] }}#}
+{% for ticket in tickets.all %}
+<ul>
+    <li>{{ ticket }} - {{ ticket.showtime }}</li>
+</ul>
+{% endfor %}
+<a href="/checkout">checkout</a>
 
 </body>
 </html>

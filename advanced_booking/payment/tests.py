@@ -1,15 +1,16 @@
 from datetime import date, datetime, timezone
+import random
 from django.urls import reverse
 from django.test import TestCase, SimpleTestCase
 from movies.models import Movie
-from halls.models import Showtime, Hall
-from .models import ShoppingCart, Ticket
+from halls.models import Showtime, Hall, Seat
+from .models import CardDetail, ShoppingCart, Ticket, Order
 from users.models import User
 
 from users.tests import create_user
 from movies.tests import create_hall, create_movie, create_showtime
 
-from .views import create_new_ticket, add_to_cart, remove_from_cart
+from .views import book_ticket, create_new_ticket, add_to_cart, remove_from_cart
 
 
 class MovieViewTests(TestCase):
@@ -74,3 +75,45 @@ class MovieViewTests(TestCase):
     #     # self.assertEqual(test_return, True)
     #     # self.assertEqual(cart.ticket.all().first(), None)
     #     # # test if it's removed
+
+
+class BookingProcessTest(TestCase):
+    def setUp(self):
+        create_user('user1@user1.com', 'user1', 'Qzh6=?sx-!B-eeJ6')
+        create_showtime(
+            create_hall(),
+            create_movie('Movie 1'),
+            datetime(2021, 1, 1, 12, 0, 0, 0, timezone.utc)
+        )
+
+    def test_book_ticket(self):
+        user = User.objects.get(pk=1)
+
+        seats = [Seat.objects.get(pk=i) for i in range(1, 4)]
+        showtime = Showtime.objects.get(pk=1)
+        tickets = [create_new_ticket(seats[i].pk, showtime.pk, 'ADULT')
+                   for i in range(3)]
+
+        cart = ShoppingCart.objects.create(user=user)
+        for i in range(3):
+            cart.ticket.add(tickets[i].pk)
+
+        card = CardDetail.objects.create(
+            card_number='1234567890123456',
+            card_holder_name='user1',
+            expire_month='1',
+            expire_year='2022'
+        )
+        card.user.add(user)
+        book_ticket(user, card)
+        cart = ShoppingCart.objects.all()
+        self.assertQuerysetEqual([], cart)
+        order = Order.objects.filter(user=user)
+        for o in order:
+            self.assertEqual(user, o.user)
+            self.assertEqual('**** **** **** 3456', o.card)
+            self.assertEqual('Succeed', o.order_status)
+        for ticket in tickets:
+            self.assertEqual(ticket.seat.status, 'X')
+
+    
