@@ -16,8 +16,8 @@ class TicketInterface(admin.ModelAdmin):
 
 
 class CardDetailsInterface(admin.ModelAdmin):
-    list_display = ('__str__', 'user', 'first4Digits', 'cardHolderLastName')
-    search_fields = ['user', 'cardHolderLastName', 'cardHolderFirstName']
+    list_display = ('__str__', 'user', 'first4Digits', 'name')
+    search_fields = ['user', 'name']
     readonly_fields = ()
     filter_horizontal = ()
     list_filter = ()

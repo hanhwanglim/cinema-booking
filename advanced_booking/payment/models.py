@@ -1,21 +1,32 @@
+#pip install django-credit-cards needed !!!!!!
 from django.db import models
 from movies.models import Movie
 from users.models import User
 from halls.models import Hall, Seat, Showtime
-
+from creditcards.models import CardNumberField, CardExpiryField, SecurityCodeField
 
 class CardDetails(models.Model):
     user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
-    cardNumber: str = models.CharField(max_length=500, null=True)
+    number = CardNumberField('card number')
     first4Digits = models.IntegerField(null=True)
-    cardHolderFirstName = models.CharField(max_length=100, null=True)
-    cardHolderLastName = models.CharField(max_length=100, null=True)
-    ExpireYear = models.IntegerField(null=True, help_text="Please input 2 digits YY")
-    ExpireMonth = models.IntegerField(null=True, help_text="Please input 2 digits MM")
-    date_created = models.DateTimeField(auto_now_add=True, null=True)
+    name = models.CharField(max_length=100, null=True)
+    expiry = CardExpiryField('expiration date')
 
     def __str__(self):
-        return str(self.id)
+        return str(self.number)
+
+#class CardDetails(models.Model):
+#    user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
+#    cardNumber: str = models.CharField(max_length=500, null=True)
+#    first4Digits = models.IntegerField(null=True)
+#    cardHolderFirstName = models.CharField(max_length=100, null=True)
+#    cardHolderLastName = models.CharField(max_length=100, null=True)
+#    ExpireYear = models.IntegerField(null=True, help_text="Please input 2 digits YY")
+#    ExpireMonth = models.IntegerField(null=True, help_text="Please input 2 digits MM")
+#    date_created = models.DateTimeField(auto_now_add=True, null=True)
+
+#    def __str__(self):
+#        return str(self.id)
 
 
 class Ticket(models.Model):
