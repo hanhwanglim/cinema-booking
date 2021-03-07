@@ -72,6 +72,7 @@ def seat(request, showtime_id):
                                     ticket_type= ticket_type)
 
                 else:
+                    print("Error: form not valid!")
                     return redirect('index')
             else:
                 print(" Not a valid SelectDatetimeForm")
