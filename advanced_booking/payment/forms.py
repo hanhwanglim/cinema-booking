@@ -1,15 +1,30 @@
-# pip install django-credit-cards needed !!!!!!
 from django import forms
+from django.forms import ModelForm
+
 from movies.models import Movie
 from halls.models import Showtime, Seat
-from creditcards.forms import CardNumberField, CardExpiryField, SecurityCodeField
+from .models import CardDetail
 
 
-class PaymentForm(forms.Form):
-    number = CardNumberField(label='Card Number')
-    expiryDate = CardExpiryField(label='Expiration Date')
-    securityCode = SecurityCodeField(label='CVV/CVC')
-    name = forms.CharField(label="Name", error_messages={'required': 'Please enter the name written on your card.'})
+class CardForm(ModelForm):
+    """Simple card form to create new card"""
+    save_card = forms.BooleanField(required=False)
+    # TODO add validations
+
+    def save(self, commit=True):
+        """
+        Overriding the default save method. If user allows the 
+        card to be stored in the database then only save it.
+        """
+        card = super().save(commit=False)
+        if commit and self.cleaned_data['save_card']:
+            card.save()
+        return card
+
+    class Meta:
+        model = CardDetail
+        fields = ['card_number', 'card_holder_name',
+                  'expire_month', 'expire_year', 'save_card']
 
 
 class SelectDatetimeForm(forms.Form):

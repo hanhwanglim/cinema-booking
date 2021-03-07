@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import ShoppingCart, Ticket, CardDetails, Order
+from .models import ShoppingCart, Ticket, CardDetail, Order
 from movies.models import Movie
 from halls.models import Hall, Seat, Showtime
 
@@ -15,9 +15,9 @@ class TicketInterface(admin.ModelAdmin):
     fieldsets = ()
 
 
-class CardDetailsInterface(admin.ModelAdmin):
-    list_display = ('__str__', 'user', 'first4Digits', 'name')
-    search_fields = ['user', 'name']
+class CardDetailInterface(admin.ModelAdmin):
+    list_display = ('__str__', 'card_holder_name')
+    search_fields = ['user', 'card_holder_name']
     readonly_fields = ()
     filter_horizontal = ()
     list_filter = ()
@@ -25,7 +25,7 @@ class CardDetailsInterface(admin.ModelAdmin):
 
 
 class OrderInterface(admin.ModelAdmin):
-    list_display = ('__str__', 'user', 'Card', 'get_tickets', 'order_status', 'amount')
+    list_display = ('__str__', 'user', 'card', 'get_tickets', 'order_status', 'amount')
     search_fields = ['user', 'tickets']
     readonly_fields = ()
     filter_horizontal = ()
@@ -47,6 +47,6 @@ class ShoppingCartInterface(admin.ModelAdmin):
 
 
 admin.site.register(Ticket, TicketInterface)
-admin.site.register(CardDetails, CardDetailsInterface)
+admin.site.register(CardDetail, CardDetailInterface)
 admin.site.register(Order, OrderInterface)
 admin.site.register(ShoppingCart)

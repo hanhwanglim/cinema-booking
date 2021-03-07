@@ -1,9 +1,9 @@
 from django.shortcuts import render, redirect
-from .forms import PaymentForm
+from .forms import CardForm
 from django.http import HttpResponse
 from movies.models import Movie
 from halls.models import Showtime
-from .models import Ticket, Order, ShoppingCart
+from .models import Ticket, Order, ShoppingCart, CardDetail
 
 
 def create_new_ticket(seat_id, showtime_id, ticket_type):
@@ -71,39 +71,52 @@ def cart(request):
         # query the cart
         cart = ShoppingCart.objects.get(user=current_user)
 
-        # FIXME: if front-end just want ticckets in the cart, do:
-        tickets = cart.ticket.all()
-        # add cart to context
+        # FIXME: if front-end just want tickets in the cart, do:
+        tickets = cart.ticket
         context = {
             "cart": cart,
             "tickets": tickets
         }
-        return render(request, 'cart.html', context)
+        return render(request, 'payment/cart.html', context)
         # add ticket to context
     else:
         return redirect('index')
 
 
-# cart function  ends... #
+def book_ticket(user, card):
+    """
+    Creates a booking for the user with the card. It marks the seat
+    as reserved and removes the shopping cart object. 
+    """
+    cart = ShoppingCart.objects.get(user=user)
+    tickets = cart.ticket.all()
+    order = Order.objects.create(
+        user=user,
+        card=card.__str__(),
+        order_status='Succeed',
+        # TODO amount
+    )
+    for ticket in tickets:
+        order.tickets.add(ticket)
+        ticket.seat.status = 'X'      # Marking seat as booked
+        ticket.seat.save()
+        ticket.save()
+    cart.delete()
+
 
 def checkout(request):
     if request.method == 'POST':
-        form = PaymentForm(request.POST)
+        form = CardForm(request.POST)
         if form.is_valid:
-            print('payment successful')
-            context = {
-                'form': form,
-                'buttonText': "Pay",
-                'action': "",
-                'title': "Checkout"
-            }
-            return render(request, 'form.html', context)
+            card = form.save()
+            book_ticket(request.user, card)
+            return redirect('booking')
     else:
-        form = PaymentForm()
+        form = CardForm()
         context = {
             'form': form,
             'buttonText': "Pay",
             'action': "",
             'title': "Checkout"
         }
-        return render(request, 'form.html', context)
+        return render(request, 'payment/payment.html', context)

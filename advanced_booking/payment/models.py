@@ -1,38 +1,21 @@
-#pip install django-credit-cards needed !!!!!!
 from django.db import models
 from movies.models import Movie
 from users.models import User
 from halls.models import Hall, Seat, Showtime
-from creditcards.models import CardNumberField, CardExpiryField, SecurityCodeField
 
-class CardDetails(models.Model):
-    user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
-    number = CardNumberField('card number')
-    first4Digits = models.IntegerField(null=True)
-    name = models.CharField(max_length=100, null=True)
-    expiry = CardExpiryField('expiration date')
+
+class CardDetail(models.Model):
+    user = models.ManyToManyField(User)
+    card_number         = models.CharField(max_length=20)
+    card_holder_name    = models.CharField(max_length=100)
+    expire_month        = models.IntegerField(null=True)
+    expire_year         = models.IntegerField(null=True)
 
     def __str__(self):
-        return str(self.number)
-
-#class CardDetails(models.Model):
-#    user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
-#    cardNumber: str = models.CharField(max_length=500, null=True)
-#    first4Digits = models.IntegerField(null=True)
-#    cardHolderFirstName = models.CharField(max_length=100, null=True)
-#    cardHolderLastName = models.CharField(max_length=100, null=True)
-#    ExpireYear = models.IntegerField(null=True, help_text="Please input 2 digits YY")
-#    ExpireMonth = models.IntegerField(null=True, help_text="Please input 2 digits MM")
-#    date_created = models.DateTimeField(auto_now_add=True, null=True)
-
-#    def __str__(self):
-#        return str(self.id)
+        return f'**** **** **** {self.card_number[-4:]}'
 
 
 class Ticket(models.Model):
-
-
-
     # ticket holder age, might apply discount when adding to cart
     # age = models.IntegerField(null=True)
     seat = models.ForeignKey(Seat, null=True, on_delete=models.SET_NULL)
@@ -44,13 +27,14 @@ class Ticket(models.Model):
     )
 
     type = models.CharField(
-        max_length = 100,
+        max_length=100,
         choices=AGE_CHOICES,
         default="ADULT",
     )
 
     # can query time, hall and movie info from showtime
-    showtime = models.ForeignKey(Showtime, null=True, on_delete=models.SET_NULL)
+    showtime = models.ForeignKey(
+        Showtime, null=True, on_delete=models.SET_NULL)
 
     date_created = models.DateTimeField(auto_now_add=True, null=True)
 
@@ -75,7 +59,8 @@ class Order(models.Model):
 
     # one order for one user and a card
     user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
-    Card = models.ForeignKey(CardDetails, null=True, on_delete=models.SET_NULL)
+    card = models.CharField(max_length=20, null=True)
+    # Card = models.ForeignKey(CardDetail, null=True, on_delete=models.SET_NULL)
 
     # one order can have many tickets
     tickets = models.ManyToManyField(Ticket)
