@@ -96,12 +96,11 @@ li a:hover {
 
 .topmovies {
     margin: 0 50px;
-    width: 300px;
+    //width: 90%;
 }
 
 .topmovies div {
-    width: 260px;
-    height: 520px;
+    height: 420px;
 }
 
 .movielist {
