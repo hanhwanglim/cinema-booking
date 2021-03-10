@@ -60,9 +60,9 @@ class SelectSeatForm(forms.Form):
 
     # add
     AGE_CHOICES = (
-        ("Child", "Child(Under 16)"),
-        ("Adult", "Adult(17-64)"),
-        ("Senior", "Senior(Over 65)"),
+        ("CHILD", "Child(Under 16)"),
+        ("ADULT", "Adult(17-64)"),
+        ("SENIOR", "Senior(Over 65)"),
     )
 
     ticket_type = forms.ChoiceField(choices=AGE_CHOICES)

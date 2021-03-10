@@ -5,6 +5,9 @@ from movies.models import Movie
 from halls.models import Showtime
 from .models import Ticket, Order, ShoppingCart, CardDetail
 
+#adjust discount for each type here.
+ticket_value = {'CHILD': 50, 'ADULT': 50, 'SENIOR': 50 * 0.8} # map ticket type to ticket values
+
 
 def create_new_ticket(seat_id, showtime_id, ticket_type):
     """
@@ -32,6 +35,8 @@ def add_to_cart(request, seat_id, showtime_id, ticket_type):
             # create a new ticket
             print("ticket_type is:")
             print(ticket_type)
+            # TODO: add limitation for child ticket for R18
+
             new_ticket = create_new_ticket(seat_id, showtime_id, ticket_type)
             if ShoppingCart.objects.filter(user=request.user).first():
                 cart = ShoppingCart.objects.get(user=request.user)
@@ -70,12 +75,15 @@ def cart(request):
 
         # query the cart
         cart = ShoppingCart.objects.get(user=current_user)
-
         # FIXME: if front-end just want tickets in the cart, do:
-        tickets = cart.ticket
+        tickets = cart.ticket.all()
+
+        amount = sum(ticket_value[ticket.type] for ticket in tickets)
+
         context = {
             "cart": cart,
-            "tickets": tickets
+            "tickets": tickets,
+            "amount": amount
         }
         return render(request, 'payment/cart.html', context)
         # add ticket to context
@@ -89,10 +97,10 @@ def book_ticket(user, card):
     as reserved and removes the shopping cart object. 
     """
     cart = ShoppingCart.objects.get(user=user)
+
     tickets = cart.ticket.all()
-    ## adjust discount for each type here.
-    ticket_value = {'CHILD': 50, 'ADULT': 50, 'SENIOR': 50 * 0.8}
-    amount = sum(dict[ticket.AGE_CHOICES] for ticket in tickets)
+
+    amount = sum(ticket_value[ticket.type] for ticket in tickets)
     order = Order.objects.create(
         user=user,
         card=card.__str__(),
