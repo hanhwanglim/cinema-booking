@@ -1,4 +1,8 @@
+import secrets
+import datetime
+
 from django.db import models
+from django.utils import timezone
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 
 
@@ -49,6 +53,9 @@ class User(AbstractBaseUser):
     # Extended fields
     # TODO: we might want to change nullable to false
     birthday = models.DateField(null=True)
+    verified = models.BooleanField(default=False)
+    auth_token = models.CharField(max_length=256, default=secrets.token_hex(32))
+
     # TODO: add more fields in the future
 
     USERNAME_FIELD = 'email'    # Changing login field to use email instead of username
@@ -58,6 +65,24 @@ class User(AbstractBaseUser):
 
     def __str__(self):
         return self.email
+
+    def generate_auth_token(self):
+        """
+        Create a new authentication token for verification.
+        """
+        self.auth_token = secrets.token_hex(32)
+        self.save()
+        return self.auth_token
+
+    def verify_user(self, token):
+        """
+        Checks if the incoming token matches authentication token.
+        Return true if same.
+        """
+        if token == self.auth_token:
+            self.verified = True
+        return self.verified
+
 
     ########################## DO NOT CHANGE ##########################
     def has_perm(self, perm, obj=None):
