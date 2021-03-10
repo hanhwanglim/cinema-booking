@@ -62,7 +62,6 @@ def seat(request, showtime_id):
                 print("SelectSeatForm is valid")
                 selected_seat_id = form.cleaned_data['selected_seats']
                 ticket_type = form.cleaned_data['ticket_type']
-
                 # add cart for login user
                 if request.user.is_authenticated:
                     current_user = request.user
