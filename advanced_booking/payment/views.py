@@ -90,21 +90,28 @@ def book_ticket(user, card):
     """
     cart = ShoppingCart.objects.get(user=user)
     tickets = cart.ticket.all()
+    ## adjust discount for each type here.
+    ticket_value = {'CHILD': 50, 'ADULT': 50, 'SENIOR': 50 * 0.8}
+    amount = sum(dict[ticket.AGE_CHOICES] for ticket in tickets)
     order = Order.objects.create(
         user=user,
         card=card.__str__(),
         order_status='Succeed',
-        # TODO amount
+        amount=amount
+
     )
     for ticket in tickets:
         order.tickets.add(ticket)
-        ticket.seat.status = 'X'      # Marking seat as booked
+        ticket.seat.status = 'X'  # Marking seat as booked
         ticket.seat.save()
         ticket.save()
     cart.delete()
 
 
 def checkout(request):
+    """
+    this view is rendering "checkout" page with forms
+    """
     if request.method == 'POST':
         form = CardForm(request.POST)
         if form.is_valid:
