@@ -13,3 +13,6 @@ secrets.py
 
 /builds
 /cache
+
+
+*.pdf
