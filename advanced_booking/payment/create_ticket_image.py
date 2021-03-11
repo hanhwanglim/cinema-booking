@@ -39,8 +39,8 @@ def generate_ticket(ticket_info):
     try:
         ticket_tmp.save(f"payment/resources/rendered_tickets/ticket{ticket_id}.pdf")
     except:
-        os.remove(f"resources/rendered_tickets/ticket{ticket_id}.pdf")
-        ticket_tmp.save(f"resources/rendered_tickets/ticket{ticket_id}.pdf")
+        os.remove(f"payment/resources/rendered_tickets/ticket{ticket_id}.pdf")
+        ticket_tmp.save(f"payment/resources/rendered_tickets/ticket{ticket_id}.pdf")
 
 
 def ticket_info(ticket):
