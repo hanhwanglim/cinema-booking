@@ -60,7 +60,8 @@ class MovieViewTests(TestCase):
         self.assertEqual("2", ticket_info(test_ticket)["ticket_id"])
 
         # if the create_ticket_image works, it should pop the image for you
-        generate_ticket(ticket_info(test_ticket))
+
+        # generate_ticket(ticket_info(test_ticket))
 
         # FIXME: write tests to support "function+view" functions
     # see Issue #33 in Gitlab

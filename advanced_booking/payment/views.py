@@ -5,6 +5,7 @@ from .forms import CardForm
 from movies.models import Movie
 from halls.models import Showtime
 from .models import Ticket, Order, ShoppingCart, CardDetail
+from .create_ticket_image import ticket_info, generate_ticket
 
 # adjust discount for each type here.
 ticket_value = {'CHILD': 50, 'ADULT': 50, 'SENIOR': 50 * 0.8}  # map ticket type to ticket values
@@ -125,6 +126,8 @@ def book_ticket(user, card):
         ticket.seat.status = 'X'  # Marking seat as booked
         ticket.seat.save()
         ticket.save()
+        # generate tickets
+        generate_ticket(ticket_info(ticket))
     cart.delete()
 
 
