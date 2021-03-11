@@ -1,12 +1,13 @@
 from django.shortcuts import render, redirect
-from .forms import CardForm
+from django.contrib import messages
 from django.http import HttpResponse
+from .forms import CardForm
 from movies.models import Movie
 from halls.models import Showtime
 from .models import Ticket, Order, ShoppingCart, CardDetail
 
-#adjust discount for each type here.
-ticket_value = {'CHILD': 50, 'ADULT': 50, 'SENIOR': 50 * 0.8} # map ticket type to ticket values
+# adjust discount for each type here.
+ticket_value = {'CHILD': 50, 'ADULT': 50, 'SENIOR': 50 * 0.8}  # map ticket type to ticket values
 
 
 def create_new_ticket(seat_id, showtime_id, ticket_type):
@@ -36,6 +37,11 @@ def add_to_cart(request, seat_id, showtime_id, ticket_type):
             print("ticket_type is:")
             print(ticket_type)
             # TODO: add limitation for child ticket for R18
+            if Showtime.objects.get(showtime_id).movie.rating <= 16:
+                messages.add_message(request, messages.error, "Movie Rating Limitation:"
+                                                              " can't buy for child")
+                print("Error:Movie Rating Limitation")
+                return redirect('index')
 
             new_ticket = create_new_ticket(seat_id, showtime_id, ticket_type)
             if ShoppingCart.objects.filter(user=request.user).first():
@@ -47,10 +53,13 @@ def add_to_cart(request, seat_id, showtime_id, ticket_type):
             cart.save()
             return redirect('cart')
         else:
-            print("Can't create ticket due to null values")
+            messages.add_message(request, messages.error, "Can't create ticket"
+                                                          " due to null values")
+            print("Error: Can't create ticket due to null values")
             return redirect('index')
     else:
-        print("Error:Unauthenticated user!")
+        messages.add_message(request, messages.error, "Unauthenticated user!")
+        print("Error: Unauthenticated user!")
         return redirect('index')
 
 
@@ -65,6 +74,7 @@ def remove_from_cart(request, ticket_id):
         cart.save()
         return redirect('cart')
     else:
+        messages.add_message(request, messages.error, "failed to remove ticket from cart")
         print("Error: failed to remove ticket from cart")
         return redirect('index')
 
