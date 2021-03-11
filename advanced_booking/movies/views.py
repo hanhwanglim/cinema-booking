@@ -1,5 +1,6 @@
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
+from django.contrib import messages
 from payment.forms import SelectDatetimeForm, SelectSeatForm
 from .models import Movie
 from halls.models import Showtime
@@ -8,6 +9,7 @@ from payment.models import Order, ShoppingCart
 
 
 def index(request):
+    messages.get_messages(request)
     movie_list = Movie.objects.all()
     context = {
         'movie_list': movie_list,
