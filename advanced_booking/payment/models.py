@@ -71,3 +71,7 @@ class Order(models.Model):
 
     def __str__(self):
         return f'{self.id} - {self.order_status}'
+
+    def date_created_to_string(self):
+        date = self.date_created.strftime("%Y-%m-%d")
+        return date

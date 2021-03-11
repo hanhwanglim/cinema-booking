@@ -25,7 +25,7 @@ class CardDetailInterface(admin.ModelAdmin):
 
 
 class OrderInterface(admin.ModelAdmin):
-    list_display = ('__str__', 'user', 'card', 'get_tickets', 'order_status', 'amount')
+    list_display = ('__str__', 'user', 'card', 'get_tickets', 'order_status', 'amount', 'date_created')
     search_fields = ['user', 'tickets']
     readonly_fields = ()
     filter_horizontal = ()
