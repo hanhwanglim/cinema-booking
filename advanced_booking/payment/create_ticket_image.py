@@ -6,6 +6,9 @@ from datetime import datetime
 
 
 # generate a printable ticket with
+import payment
+
+
 def generate_ticket(ticket_info):
     # TODO: Test if it works without absolute path in win/linux
 
@@ -36,6 +39,7 @@ def generate_ticket(ticket_info):
     # ticket_tmp.show()
 
     ticket_id = ticket_info["ticket_id"]
+    path = os.path.dirname(payment.__file__)
     try:
         ticket_tmp.save(f"payment/resources/rendered_tickets/ticket{ticket_id}.pdf")
     except:
