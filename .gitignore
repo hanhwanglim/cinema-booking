@@ -13,3 +13,5 @@ secrets.py
 
 /builds
 /cache
+
+advanced_booking/payment/resources/rendered_tickets/
