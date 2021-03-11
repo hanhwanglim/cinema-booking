@@ -36,12 +36,14 @@ def add_to_cart(request, seat_id, showtime_id, ticket_type):
             # create a new ticket
             print("ticket_type is:")
             print(ticket_type)
-            # TODO: add limitation for child ticket for R18
-            if Showtime.objects.get(showtime_id).movie.rating <= 16:
-                messages.add_message(request, messages.error, "Movie Rating Limitation:"
-                                                              " can't buy for child")
-                print("Error:Movie Rating Limitation")
-                return redirect('index')
+            # FIXME: elegant way to limit this.
+            # Limit buying child ticket for some movies
+            if ticket_type == 'CHILD':
+                if Showtime.objects.get(id=showtime_id).movie.rating <= 16:
+                    messages.add_message(request, messages.error, "Movie Rating Limitation:"
+                                                                  " can't buy for child")
+                    print("Error:Movie Rating Limitation")
+                    return redirect('index')
 
             new_ticket = create_new_ticket(seat_id, showtime_id, ticket_type)
             if ShoppingCart.objects.filter(user=request.user).first():
