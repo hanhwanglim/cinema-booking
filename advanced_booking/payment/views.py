@@ -83,6 +83,8 @@ def remove_from_cart(request, ticket_id):
 
 
 def cart(request):
+    # handle some messages from failed booking
+    messages.get_messages(request)
     if request.user.is_authenticated:
         current_user = request.user
 
@@ -107,11 +109,22 @@ def cart(request):
 def book_ticket(user, card):
     """
     Creates a booking for the user with the card. It marks the seat
-    as reserved and removes the shopping cart object. 
+    as reserved and removes the shopping cart object.
+
+    Return True if booked successful, else return False
     """
     cart = ShoppingCart.objects.get(user=user)
 
     tickets = cart.ticket.all()
+
+    trigger = 0 # inital trigger
+    for ticket in tickets:
+        if ticket.seat.status == 'X': # any ticket has been booked
+            cart.ticket.remove(ticket)
+            trigger = 1 # any removed ticket triggered failed to book
+
+    if trigger:
+        return False
 
     amount = sum(ticket_value[ticket.type] for ticket in tickets)
     order = Order.objects.create(
@@ -130,6 +143,7 @@ def book_ticket(user, card):
         generate_ticket(ticket_info(ticket))
     cart.delete()
 
+    return True
 
 def checkout(request):
     """
@@ -139,7 +153,9 @@ def checkout(request):
         form = CardForm(request.POST)
         if form.is_valid:
             card = form.save()
-            book_ticket(request.user, card)
+            if book_ticket(request.user, card) == False:
+                messages.add_message(request, messages.error, "Some tickets are unavailable. Please try again.")
+                return redirect('cart')
             return redirect('booking')
     else:
         form = CardForm()
