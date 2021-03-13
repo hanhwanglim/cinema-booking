@@ -40,9 +40,9 @@ def add_to_cart(request, seat_id, showtime_id, ticket_type):
             # FIXME: elegant way to limit this.
             # Limit buying child ticket for movies which are 18 OR R18 in certificate.
             if ticket_type == 'CHILD':
-                if  Showtime.objects.get(id=showtime_id).movie.certificate in ["18", "R18"]:
-                    messages.add_message(request, messages.error, "Movie certificate Limitation:"
-                                                                  " can't buy for child")
+                if Showtime.objects.get(id=showtime_id).movie.certificate in ["18", "R18"]:
+                    messages.error(request, "Movie certificate Limitation:"
+                                            " can't buy for child")
                     print("Error:Movie Rating Limitation")
                     return redirect('index')
 
@@ -56,12 +56,12 @@ def add_to_cart(request, seat_id, showtime_id, ticket_type):
             cart.save()
             return redirect('cart')
         else:
-            messages.add_message(request, messages.error, "Can't create ticket"
-                                                          " due to null values")
+            messages.error(request, "Can't create ticket"
+                                    " due to null values")
             print("Error: Can't create ticket due to null values")
             return redirect('index')
     else:
-        messages.add_message(request, messages.error, "Unauthenticated user!")
+        messages.error(request, "Unauthenticated user!")
         print("Error: Unauthenticated user!")
         return redirect('index')
 
@@ -77,7 +77,7 @@ def remove_from_cart(request, ticket_id):
         cart.save()
         return redirect('cart')
     else:
-        messages.add_message(request, messages.error, "failed to remove ticket from cart")
+        messages.error(request, "failed to remove ticket from cart")
         print("Error: failed to remove ticket from cart")
         return redirect('index')
 
@@ -117,11 +117,11 @@ def book_ticket(user, card):
 
     tickets = cart.ticket.all()
 
-    trigger = 0 # inital trigger
+    trigger = 0  # inital trigger
     for ticket in tickets:
-        if ticket.seat.status == 'X': # any ticket has been booked
+        if ticket.seat.status == 'X':  # any ticket has been booked
             cart.ticket.remove(ticket)
-            trigger = 1 # any removed ticket triggered failed to book
+            trigger = 1  # any removed ticket triggered failed to book
 
     if trigger:
         return False
@@ -145,6 +145,7 @@ def book_ticket(user, card):
 
     return True
 
+
 def checkout(request):
     """
     this view is rendering "checkout" page with forms
@@ -154,7 +155,7 @@ def checkout(request):
         if form.is_valid:
             card = form.save()
             if book_ticket(request.user, card) == False:
-                messages.add_message(request, messages.error, "Some tickets are unavailable. Please try again.")
+                messages.error(request, 'Some tickets are unavailable. Please try again.')
                 return redirect('cart')
             return redirect('booking')
     else:
