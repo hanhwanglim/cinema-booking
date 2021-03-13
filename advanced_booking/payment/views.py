@@ -7,8 +7,8 @@ from halls.models import Showtime
 from .models import Ticket, Order, ShoppingCart, CardDetail
 from .create_ticket_image import ticket_info, generate_ticket
 
-# adjust discount for each type here.
-ticket_value = {'CHILD': 50, 'ADULT': 50, 'SENIOR': 50 * 0.8}  # map ticket type to ticket values
+#adjust discount for each type here.
+ticket_value = {'CHILD': 5, 'ADULT': 5, 'SENIOR': 5 * 0.8} # map ticket type to ticket values
 
 
 def create_new_ticket(seat_id, showtime_id, ticket_type):

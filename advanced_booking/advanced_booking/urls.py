@@ -21,5 +21,6 @@ urlpatterns = [
     path('', include('movies.urls')),
     path('',include('payment.urls')),
     path('', include('users.urls')),
+    path('', include('accounting.urls')),
     path('', include('django.contrib.auth.urls')),
 ]
