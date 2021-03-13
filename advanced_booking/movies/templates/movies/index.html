@@ -1,0 +1,41 @@
+<title>Home</title>
+{% load static %}
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <link rel="stylesheet" type="text/css" href="{% static 'movies/main.css' %}">
+</head>
+
+<body>
+    <ul class="navbar">
+        <li><a href="">Home</a></li>
+        <li><a href="#">News</a></li>
+        <li><a href="#">Contact</a></li>
+        <li><a href="#">About</a></li>
+    </ul>
+    <h2 class="homemovieheader">Top Films</h2>
+    {% if movie_list %}
+    <ul class="topmovies">
+        {% for movie in movie_list %}
+        <a class="movielinkpost" href="{% url 'movie' movie.id %}">
+            <div class="moviepos">
+                <div class="moviepos2">
+                    <li class="movielist">
+                        <img width="auto" height="100%" src="https://m.media-amazon.com/images/I/71tUSFn3W0L._AC_SL1000_.jpg">
+                    </li>
+                    <p class="moviename">{{ movie }}</p>
+                </div>
+            </div>
+        </a>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p>No movies are available.</p>
+    {% endif %}
+    <br>
+    </div>
+</body>
+
+</html>

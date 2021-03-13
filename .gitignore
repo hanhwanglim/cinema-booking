@@ -1,0 +1,18 @@
+__pycache__/
+
+# IDE files
+.idea/
+.vscode/
+
+
+# Only for Development only
+**/migrations/**
+!**/migrations
+!**/migrations/__init__.py
+secrets.py
+
+/builds
+/cache
+
+
+*.pdf
