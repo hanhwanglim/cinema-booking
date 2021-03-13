@@ -21,16 +21,18 @@
     {% if movie_list %}
     <ul class="topmovies">
         {% for movie in movie_list %}
-        <a class="movielinkpost" href="{% url 'movie' movie.id %}">
-            <div class="moviepos">
-                <div class="moviepos2">
+        <div>
+            <a class="movielinkpost" href="{% url 'movie' movie.id %}">
+
+                <div class="moviepos">
                     <li class="movielist">
                         <img width="auto" height="100%" src="https://m.media-amazon.com/images/I/71tUSFn3W0L._AC_SL1000_.jpg">
                     </li>
                     <p class="moviename">{{ movie }}</p>
                 </div>
-            </div>
-        </a>
+
+            </a>
+        </div>
         {% endfor %}
     </ul>
     {% else %}
