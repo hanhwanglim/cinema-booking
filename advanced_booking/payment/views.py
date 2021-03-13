@@ -5,6 +5,7 @@ from .forms import CardForm
 from movies.models import Movie
 from halls.models import Showtime
 from .models import Ticket, Order, ShoppingCart, CardDetail
+from .create_ticket_image import ticket_info, generate_ticket
 
 # adjust discount for each type here.
 ticket_value = {'CHILD': 50, 'ADULT': 50, 'SENIOR': 50 * 0.8}  # map ticket type to ticket values
@@ -16,8 +17,8 @@ def create_new_ticket(seat_id, showtime_id, ticket_type):
     """
     if seat_id and showtime_id and ticket_type:
         # create a new ticket
-        print("ticket_type is:")
-        print(ticket_type)
+        # print("ticket_type is:")
+        # print(ticket_type)
         new_ticket = Ticket.objects.create(seat_id=seat_id, showtime_id=showtime_id, type=ticket_type)
         return new_ticket
 
@@ -34,13 +35,13 @@ def add_to_cart(request, seat_id, showtime_id, ticket_type):
     if request.user.is_authenticated:
         if seat_id and showtime_id and ticket_type:
             # create a new ticket
-            print("ticket_type is:")
-            print(ticket_type)
+            # print("ticket_type is:")
+            # print(ticket_type)
             # FIXME: elegant way to limit this.
-            # Limit buying child ticket for some movies
+            # Limit buying child ticket for movies which are 18 OR R18 in certificate.
             if ticket_type == 'CHILD':
-                if Showtime.objects.get(id=showtime_id).movie.rating <= 16:
-                    messages.add_message(request, messages.error, "Movie Rating Limitation:"
+                if  Showtime.objects.get(id=showtime_id).movie.certificate in ["18", "R18"]:
+                    messages.add_message(request, messages.error, "Movie certificate Limitation:"
                                                                   " can't buy for child")
                     print("Error:Movie Rating Limitation")
                     return redirect('index')
@@ -125,6 +126,8 @@ def book_ticket(user, card):
         ticket.seat.status = 'X'  # Marking seat as booked
         ticket.seat.save()
         ticket.save()
+        # generate tickets
+        generate_ticket(ticket_info(ticket))
     cart.delete()
 
 

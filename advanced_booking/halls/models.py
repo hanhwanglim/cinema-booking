@@ -58,3 +58,6 @@ class Seat(models.Model):
 
     def __str__(self):
         return f'Seat ({self.row_number}, {self.seat_number})'
+
+    # def to_string(self):
+    #     return f'ROW: {self.row_number} No.{self.seat_number}'
