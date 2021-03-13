@@ -20,6 +20,8 @@ class Movie(models.Model):
     rating          = models.DecimalField(max_digits=3, decimal_places=1)
     premier_date    = models.DateField(null=True)
     blurb           = models.TextField(max_length=1000, blank=True)
+    picturelink     = models.CharField(max_length = 1000,blank =True)
+    
 
     def __str__(self):
         return f'{self.title} ({self.premier_date.year})'
