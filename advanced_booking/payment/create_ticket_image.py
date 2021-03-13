@@ -3,7 +3,7 @@ import time
 from PIL import Image, ImageFont, ImageDraw
 from .models import Ticket
 from datetime import datetime
-
+import qrcode
 
 # generate a printable ticket with
 import payment
@@ -35,16 +35,35 @@ def generate_ticket(ticket_info):
     image_editable.text((1000, 665), "Row " + ticket_info["seat_row"], (0, 0, 0), font=title_font)
     image_editable.text((1000, 715), "No. " + ticket_info["seat_number"], (0, 0, 0), font=title_font)
 
+    #add qr code
+    input_data = "Movie:"+ticket_info["title"]+"; Date:"+ticket_info["date"]+\
+                 "; Time"+ticket_info["time"]+"; Row :"+ ticket_info["seat_row"]+ \
+                 "; Seat Number: " + ticket_info["seat_number"]
+
+    qr_image_size = 10
+    qr = qrcode.QRCode(
+        # error_correction=qrcode.constants.ERROR_CORRECT_H,
+        version=1,
+        box_size=qr_image_size,
+        border=2)
+    qr.add_data(input_data)
+    qr.make(fit=True)
+    qr_img = qr.make_image(fill='black', back_color='white').convert('RGBA')
+
+    # qr_img + ticket_tmp   => ticketImage
+    ticketImage = ticket_tmp.copy()
+    ticketImage.paste(qr_img, (720, 250))
+
     # for debugging
-    # ticket_tmp.show()
+    # ticketImage.show()
 
     ticket_id = ticket_info["ticket_id"]
     path = os.path.dirname(payment.__file__)
     try:
-        ticket_tmp.save(f"payment/resources/rendered_tickets/ticket{ticket_id}.pdf")
+        ticketImage.save(f"payment/resources/rendered_tickets/ticket{ticket_id}.pdf")
     except:
         os.remove(f"payment/resources/rendered_tickets/ticket{ticket_id}.pdf")
-        ticket_tmp.save(f"payment/resources/rendered_tickets/ticket{ticket_id}.pdf")
+        ticketImage.save(f"payment/resources/rendered_tickets/ticket{ticket_id}.pdf")
 
 
 def ticket_info(ticket):
