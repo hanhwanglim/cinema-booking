@@ -136,8 +136,13 @@ LOGOUT_REDIRECT_URL = '/'
 
 # Email related configurations
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_USE_TLS = True
-EMAIL_PORT = 587
-EMAIL_HOST_USER = 'EMAIL' # un-string EMAIL in future
-EMAIL_HOST_PASSWORD = 'PASSWORD' # un-string PASSWORD in future
+# EMAIL_HOST = 'smtp.gmail.com'
+# EMAIL_USE_TLS = True
+# EMAIL_PORT = 587
+# EMAIL_HOST_USER = 'EMAIL' # un-string EMAIL in future
+# EMAIL_HOST_PASSWORD = 'PASSWORD' # un-string PASSWORD in future
+
+EMAIL_HOST = 'smtp.mailtrap.io'
+EMAIL_HOST_USER = '72c28fbcc45796'
+EMAIL_HOST_PASSWORD = 'bc7cf011431953'
+EMAIL_PORT = '2525'
