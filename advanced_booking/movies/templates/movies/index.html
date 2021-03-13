@@ -38,6 +38,23 @@
     {% else %}
     <p>No movies are available.</p>
     {% endif %}
+    <h2 class="homemovieheader">All Films</h2>
+    {% if movie_list %} {% for movie in movie_list %}
+    <div class="allfilms">
+        <a class="movielinkpost2" href="{% url 'movie' movie.id %}">
+
+            <div class="moviepos2">
+                <li class="movielist">
+                    <img width="auto" height="100%" src="https://m.media-amazon.com/images/I/71tUSFn3W0L._AC_SL1000_.jpg">
+                </li>
+                <p class="moviename">{{ movie }}</p>
+            </div>
+
+        </a>
+    </div>
+    {% endfor %} {% else %}
+    <p>No movies are available.</p>
+    {% endif %}
 
     <br>
 

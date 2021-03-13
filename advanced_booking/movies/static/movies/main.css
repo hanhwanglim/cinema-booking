@@ -147,3 +147,7 @@ li a:hover {
     width: 180px;
     height: 300px;
 }
+
+.allfilms {
+    display: inline-block;
+}
