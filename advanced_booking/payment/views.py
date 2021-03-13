@@ -1,14 +1,18 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.http import HttpResponse
+from django.core.mail import send_mail, EmailMessage
 from .forms import CardForm
 from movies.models import Movie
 from halls.models import Showtime
 from .models import Ticket, Order, ShoppingCart, CardDetail
 from .create_ticket_image import ticket_info, generate_ticket
+import os
+import payment
+# adjust discount for each type here.
+from advanced_booking import settings
 
-#adjust discount for each type here.
-ticket_value = {'CHILD': 5, 'ADULT': 5, 'SENIOR': 5 * 0.8} # map ticket type to ticket values
+ticket_value = {'CHILD': 5, 'ADULT': 5, 'SENIOR': 5 * 0.8}  # map ticket type to ticket values
 
 
 def create_new_ticket(seat_id, showtime_id, ticket_type):
@@ -132,8 +136,8 @@ def book_ticket(user, card):
         card=card.__str__(),
         order_status='Succeed',
         amount=amount
-
     )
+
     for ticket in tickets:
         order.tickets.add(ticket)
         ticket.seat.status = 'X'  # Marking seat as booked
@@ -141,9 +145,31 @@ def book_ticket(user, card):
         ticket.save()
         # generate tickets
         generate_ticket(ticket_info(ticket))
+
     cart.delete()
 
     return True
+
+
+def sendticket(order):
+    """
+    Send ticket to user
+    """
+
+    try:
+        subject = "Your order" + str(order.id) + "(Digital ticketed included)"
+        mail = EmailMessage(subject,
+                            'Thank you for booking with us.',
+                            settings.EMAIL_HOST_USER,
+                            [order.user.mail])
+        path = os.path.dirname(payment.__file__)
+
+        for ticket in order.tickets.all():
+            mail.attach_file(f'{path}/resources/rendered_tickets/ticket{ticket.id}.pdf')
+        mail.send()
+        print("Success: Sent tickets to useremail.")
+    except:
+        print('Error: Failed to send email: CAN NOT attach files')  ## big or corrupt
 
 
 def checkout(request):
@@ -157,6 +183,8 @@ def checkout(request):
             if book_ticket(request.user, card) == False:
                 messages.error(request, 'Some tickets are unavailable. Please try again.')
                 return redirect('cart')
+
+            messages.success(request, 'Successfully booked tickets. Check email for your tickets. ')
             return redirect('booking')
     else:
         form = CardForm()
