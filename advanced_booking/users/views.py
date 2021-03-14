@@ -1,12 +1,15 @@
+from django.http import HttpResponse, Http404
 from django.shortcuts import redirect, render
 from django.urls.base import reverse
 from django.contrib.auth import views
 from django.template.loader import render_to_string
 
 from .models import User
-from payment.models import Order
+from payment.models import Order,Ticket
 from .forms import RegisterForm
 from django.core.mail import send_mail
+import payment
+import os
 
 
 
