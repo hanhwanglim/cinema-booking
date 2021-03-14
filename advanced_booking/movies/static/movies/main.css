@@ -94,13 +94,19 @@ li a:hover {
     width: 280px
 }
 
-.topmovies {}
+.topmovies {
+    margin: 0 50px;
+}
+
+.topmovies div {
+    height: 350px;
+}
 
 .movielist {
     overflow: hidden;
     margin: 10px;
     height: 260px;
-    width: 170px;
+    width: 180px;
     background-color: white;
     display: inline;
 }
@@ -116,16 +122,16 @@ li a:hover {
 }
 
 .moviepos2 {
-    height: 380px;
-    width: 170px;
+    height: 350px;
+    width: 180px;
     display: inline-block;
     word-wrap: normal;
     overflow: hidden;
 }
 
 .moviepos {
-    height: 380px;
-    width: 170px;
+    height: 350px;
+    width: 180px;
     display: inline-block;
     word-wrap: normal;
     overflow: hidden;
@@ -135,4 +141,13 @@ li a:hover {
     margin-left: 40px;
     color: white;
     font-weight: 100;
+}
+
+.movielinkpost {
+    width: 180px;
+    height: 300px;
+}
+
+.allfilms {
+    display: inline-block;
 }

@@ -60,10 +60,10 @@ def generate_ticket(ticket_info):
     ticket_id = ticket_info["ticket_id"]
     path = os.path.dirname(payment.__file__)
     try:
-        ticketImage.save(f"payment/resources/rendered_tickets/ticket{ticket_id}.pdf")
+        ticketImage.save(f"{path}/resources/rendered_tickets/ticket{ticket_id}.pdf")
     except:
-        os.remove(f"payment/resources/rendered_tickets/ticket{ticket_id}.pdf")
-        ticketImage.save(f"payment/resources/rendered_tickets/ticket{ticket_id}.pdf")
+        os.remove(f"{path}/resources/rendered_tickets/ticket{ticket_id}.pdf")
+        ticketImage.save(f"{path}/resources/rendered_tickets/ticket{ticket_id}.pdf")
 
 
 def ticket_info(ticket):

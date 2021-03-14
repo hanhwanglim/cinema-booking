@@ -1,9 +1,0 @@
-Requires:
-Python
-Selenium for Python: https://pypi.org/project/selenium/
-Google Chrome(for now)
-Google chrome webdriver for Selenium: https://www.selenium.dev/documentation/en/webdriver/driver_requirements/
-NOTE: THIS WEB DRIVER SHOULD MATCH THE VERSION OF CHROME INSTALLED
-
-
-Modification to the path required for the web driver(currently windows example in code) to function.
