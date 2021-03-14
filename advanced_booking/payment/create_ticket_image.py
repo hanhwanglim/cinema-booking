@@ -35,9 +35,9 @@ def generate_ticket(ticket_info):
     image_editable.text((1000, 665), "Row " + ticket_info["seat_row"], (0, 0, 0), font=title_font)
     image_editable.text((1000, 715), "No. " + ticket_info["seat_number"], (0, 0, 0), font=title_font)
 
-    #add qr code
-    input_data = "Movie:"+ticket_info["title"]+"; Date:"+ticket_info["date"]+\
-                 "; Time"+ticket_info["time"]+"; Row :"+ ticket_info["seat_row"]+ \
+    # add qr code
+    input_data = "Movie:" + ticket_info["title"] + "; Date:" + ticket_info["date"] + \
+                 "; Time" + ticket_info["time"] + "; Row :" + ticket_info["seat_row"] + \
                  "; Seat Number: " + ticket_info["seat_number"]
 
     qr_image_size = 10
@@ -59,11 +59,18 @@ def generate_ticket(ticket_info):
 
     ticket_id = ticket_info["ticket_id"]
     path = os.path.dirname(payment.__file__)
+    # write pdf
     try:
         ticketImage.save(f"{path}/resources/rendered_tickets/ticket{ticket_id}.pdf")
     except:
         os.remove(f"{path}/resources/rendered_tickets/ticket{ticket_id}.pdf")
         ticketImage.save(f"{path}/resources/rendered_tickets/ticket{ticket_id}.pdf")
+    # write image
+    try:
+        ticketImage.save(f"{path}/resources/rendered_tickets/ticket{ticket_id}.png")
+    except:
+        os.remove(f"{path}/resources/rendered_tickets/ticket{ticket_id}.png")
+        ticketImage.save(f"{path}/resources/rendered_tickets/ticket{ticket_id}.png")
 
 
 def ticket_info(ticket):
