@@ -167,9 +167,6 @@ submit button is messed up
     background-color: #3c54da;
   }
 
-  
-
-
 .dropdown-toggle::after {
   display: none;
 }
