@@ -1,5 +1,6 @@
 {% extends 'payment/base.html' %}
 
+{% load crispy_forms_tags %}
 
 {% block content %}
 
@@ -11,7 +12,8 @@
 		</div>
 		<form action="{{ action }}" method="POST">
 			{% csrf_token %}
-			{{ form }}<br>
+            {{ form|crispy }}
+			<br>
 			<button type="submit">{{ buttonText }}</button>
 
 {% endblock %}
