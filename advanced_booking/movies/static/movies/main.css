@@ -1,3 +1,4 @@
+
 /*Row and Column styles */
 
 .col-lg-12{ /*large box*/
@@ -5,7 +6,7 @@
     border: 5px solid #1E2D82;
     padding: 50px;
     margin: 20px;
-    background-color: #1E2D82;
+    background-color: #1c2c88;
     box-shadow: 0px 0px 10px 0px black;
   }
   .col-lg-6{ /*large box*/
@@ -35,12 +36,19 @@
     color:#DBE9EE;
     
   }
+
+  .card{
+      background-color: #0a1553;
+      box-shadow: 0px 0px 10px 0px black;
+  }
+
+
+
   
   h1 {
     
     color: #FFFBFE;
     font-family: 'Montserrat', sans-serif;
-    font-weight: bold;
   }
   h5{
     color: #FFFBFE;
@@ -64,8 +72,8 @@
     border-top: 2px solid #E6E6E9;
     border-radius: 5px;
   }
-
-
+  
+  
 /* Button position for Homepaage */
 
 .wrapper {
@@ -96,6 +104,7 @@
     margin: 14px;
     margin-top: 18px;
 }
+
 
 
 
@@ -241,3 +250,32 @@ li a:hover {
             max-height: 100vh;
             margin: auto;
         }
+
+/*nav bar*/
+li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+  }
+
+     
+  li a:hover {
+    background-color: #3c54da;
+  }
+
+.dropdown-toggle::after {
+  display: none;
+}
+.text-decoration-none{
+text-decoration: none!important;
+}
+/* Font Awesome Icons have variable width. Added fixed width to fix that.*/
+.icon-width { width: 2rem;}
+
+nav .navbar-nav li a{
+  color: #03071E !important;
+  font-weight: bold;
+  
+  }

@@ -26,7 +26,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200&family=Raleway&family=Roboto&display=swap" rel="stylesheet">
     
-   <link rel="stylesheet" type="text/css" href="{% static 'users/log_reg_main.css' %}">
+   <link rel="stylesheet" type="text/css" href="{% static 'users/index_main.css' %}">
     
     <title>Cin4D</title>
   </head>
@@ -35,7 +35,7 @@
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 
-    <nav class="navbar navbar-expand-lg navbar-light shadow-sm bg-dark fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-light shadow-sm bg-light fixed-top">
     <div class="container"> <a class="navbar-brand d-flex align-items-center" href="/">
     <svg width="20px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve">
     <g>
@@ -60,7 +60,6 @@
     <li class="nav-item px-lg-2 active"> <a class="nav-link" href="#"> <span class="d-inline-block d-lg-none icon-width"></span><i class="fas fa-home"></i></span> Account</a> </li>
     
     <li class="nav-item px-lg-2"> <a class="nav-link" href="#"><span class="d-inline-block d-lg-none icon-width"><i class="fas fa-spa"></i></span>Services</a> </li>
-    <li class="nav-item px-lg-2"> <a class="nav-link" href="#"><span class="d-inline-block d-lg-none icon-width"><i class="far fa-user"></i></i></span>About</a> </li>
     
     <!-- <li class="nav-item px-lg-2 dropdown d-menu">
     <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="d-inline-block d-lg-none icon-width"><i class="far fa-caret-square-down"></i></span>Dropdown
@@ -123,7 +122,10 @@
     <!-- <h2 class="homemovieheader">Top Films</h2> -->
 
     <h1 class="text-center homemovieheader">Top Films</h1>
+    
+      
 
+   
     {% if movie_list %}
     <ul class="topmovies">
         {% for movie in movie_list %}
@@ -144,25 +146,31 @@
     {% else %}
     <p>No movies are available.</p>
     {% endif %}
-    <h2 class="homemovieheader">All Films</h2>
-    {% if movie_list %} {% for movie in movie_list %}
-    <div class="allfilms">
-        <a class="movielinkpost2" href="{% url 'movie' movie.id %}">
+    
+    <div class="container">
+      <div class="row"></div>
+        <div class ="col-lg-12">
+          <h2 class="homemovieheader">All Films</h2>
+          {% if movie_list %} {% for movie in movie_list %}
+          <div class="allfilms">
+              <a class="movielinkpost2" href="{% url 'movie' movie.id %}">
 
-            <div class="moviepos2">
-                <li class="movielist">
-                    <img width="auto" height="100%" class="box" src="{{ movie.picturelink }}">
-                </li>
-                <p class="moviename">{{ movie }}</p>
-            </div>
+                  <div class="moviepos2">
+                      <li class="movielist">
+                          <img width="auto" height="100%" class="box" src="{{ movie.picturelink }}">
+                      </li>
+                      <p class="moviename">{{ movie }}</p>
+                  </div>
 
-        </a>
+              </a>
+          </div>
+          {% endfor %} {% else %}
+          <p>No movies are available.</p>
+          {% endif %}
+          <br>
+        </div>
+      </div>
     </div>
-    {% endfor %} {% else %}
-    <p>No movies are available.</p>
-    {% endif %}
-
-    <br>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
