@@ -18,3 +18,5 @@ secrets.py
 *.pdf
 
 .DS_Store
+
+advanced_booking/payment/resources/rendered_tickets/
