@@ -24,8 +24,8 @@ def get_income_between(start_date, end_date):
         dates.append([current_date, 0])
         current_date += timedelta(days=1)
 
-    # Because the query would be today : 00:00:00 it would not get 
-    # todays things. 
+    # Because the query would be today : 00:00:00 it would not get
+    # todays things.
     midnight = end_date + timedelta(days=1) - timedelta(microseconds=1)
     order = Order.objects.filter(date_created__range=[start_date, end_date])
 
@@ -38,7 +38,7 @@ def get_income_between(start_date, end_date):
     data_format = []
     for d in dates:
         data_format.append([f'{d[0].strftime("%d-%m-%Y")}', d[1]])
-        
+
     return data_format
 
 
@@ -68,7 +68,7 @@ def accounting(request):
     today = timezone.now()
     last_week = today - timedelta(days=7)
     data = get_income_between(last_week, today)
-    
+
     context = {
         'start_date': last_week.strftime("%d-%m-%Y"),
         'end_date': today.strftime("%d-%m-%Y"),
