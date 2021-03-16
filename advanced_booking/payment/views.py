@@ -93,7 +93,13 @@ def cart(request):
         current_user = request.user
 
         # query the cart
+        try:
+            cart = ShoppingCart.objects.get(user=current_user)
+        except:
+            cart = ShoppingCart.objects.create(user=request.user)
+
         cart = ShoppingCart.objects.get(user=current_user)
+
         # FIXME: if front-end just want tickets in the cart, do:
         tickets = cart.ticket.all()
 
@@ -107,6 +113,7 @@ def cart(request):
         return render(request, 'payment/cart.html', context)
         # add ticket to context
     else:
+        messages.error("Need login!")
         return redirect('index')
 
 
