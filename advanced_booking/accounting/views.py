@@ -4,7 +4,6 @@ from datetime import date, timedelta, datetime
 from django.utils import timezone
 from movies.models import Movie
 from payment.models import Order, Ticket
-from .forms import DateForm
 
 
 def get_income_between(start_date, end_date):

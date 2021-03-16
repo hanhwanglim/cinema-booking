@@ -9,7 +9,6 @@ from .forms import RegisterForm
 from django.core.mail import send_mail
 
 
-
 def verify_user(request, user):
     token = user.generate_auth_token()
     hostname = request.META['HTTP_HOST']
@@ -33,11 +32,9 @@ def register(request):
             verify_user(request, user)
             return redirect('index')
         else:
-            # FIXME the form always returns the error message password_mismatch
-            # despite the problem of the user entering an existing email or username
             context = {
                 'form': RegisterForm(),
-                'error_message': form.error_messages
+                'error_message': form.errors.as_text()
             }
             return render(request, 'users/register.html', context)
     else:
