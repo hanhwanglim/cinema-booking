@@ -6,40 +6,48 @@ from halls.models import Hall, Seat, Showtime
 
 class CardDetail(models.Model):
     user = models.ManyToManyField(User)
-    card_number         = models.CharField(max_length=20)
-    card_holder_name    = models.CharField(max_length=100)
-    expire_month        = models.IntegerField(null=True)
-    expire_year         = models.IntegerField(null=True)
+    card_number = models.CharField(max_length=20)
+    card_holder_name = models.CharField(max_length=100)
+    expire_month = models.IntegerField(null=True)
+    expire_year = models.IntegerField(null=True)
 
     def __str__(self):
         return f'**** **** **** {self.card_number[-4:]}'
 
 
 class Ticket(models.Model):
-    # ticket holder age, might apply discount when adding to cart
-    # age = models.IntegerField(null=True)
-    seat = models.ForeignKey(Seat, null=True, on_delete=models.SET_NULL)
-
     AGE_CHOICES = (
         ("CHILD", "Child(Under 16)"),
         ("ADULT", "Adult(17-64)"),
         ("SENIOR", "Senior(Over 65)"),
     )
 
+    seat = models.ForeignKey(Seat, null=True, on_delete=models.SET_NULL)
     type = models.CharField(
         max_length=100,
         choices=AGE_CHOICES,
         default="ADULT",
     )
-
-    # can query time, hall and movie info from showtime
     showtime = models.ForeignKey(
         Showtime, null=True, on_delete=models.SET_NULL)
-
     date_created = models.DateTimeField(auto_now_add=True, null=True)
+    price = models.FloatField(null=True)
 
     def __str__(self):
         return str(self.id)
+
+    def save(self, *args, **kwargs):
+        """
+        Overriding save method to save price depending 
+        on the AGE_CHOICE.
+        """
+        ticket_value = {
+            'CHILD': 5,
+            'ADULT': 5,
+            'SENIOR': 5 * 0.8
+        }
+        self.price = ticket_value[self.type]
+        super().save(*args, **kwargs)
 
 
 class ShoppingCart(models.Model):
