@@ -2,7 +2,7 @@ import datetime
 from django.test import TestCase
 from users.tests import create_user
 from payment.models import Order
-from .views import get_weekly_income
+from .views import get_income_between
 
 
 class AccountingTest(TestCase):
@@ -20,7 +20,7 @@ class AccountingTest(TestCase):
             o.date_created = datetime.datetime(2021, 2, i, 0, 0, 0)
             o.save()
 
-    def test_get_weekly_income(self):
+    def test_get_income_between(self):
         # Create another order on a day
         o = Order.objects.create(
             card='90328410983094',
@@ -31,7 +31,7 @@ class AccountingTest(TestCase):
         o.save()
 
         date = datetime.datetime(2021, 2, 6, 0, 0, 0)
-        data = get_weekly_income(date)
+        data = get_income_between(date)
         # Test size of data
         self.assertEqual(len(data), 7)
 
