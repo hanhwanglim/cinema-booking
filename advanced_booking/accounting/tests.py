@@ -2,7 +2,7 @@ import datetime
 from django.test import TestCase
 from users.tests import create_user
 from payment.models import Order
-from .views import get_weekly_income
+from .views import get_income_between
 
 
 class AccountingTest(TestCase):
@@ -20,7 +20,7 @@ class AccountingTest(TestCase):
             o.date_created = datetime.datetime(2021, 2, i, 0, 0, 0)
             o.save()
 
-    def test_get_weekly_income(self):
+    def test_get_income_between(self):
         # Create another order on a day
         o = Order.objects.create(
             card='90328410983094',
@@ -30,19 +30,21 @@ class AccountingTest(TestCase):
         o.date_created = datetime.datetime(2021, 2, 3, 0, 0, 0)
         o.save()
 
-        date = datetime.datetime(2021, 2, 6, 0, 0, 0)
-        data = get_weekly_income(date)
+        start_date = datetime.datetime(2021, 1, 31, 0, 0, 0)
+        end_date = datetime.datetime(2021, 2, 6, 0, 0, 0)
+
+        data = get_income_between(start_date, end_date)
         # Test size of data
         self.assertEqual(len(data), 7)
 
         # Test for date created for each array
-        self.assertEqual(data[0][0], '2021-01-31')
-        self.assertEqual(data[1][0], '2021-02-01')
-        self.assertEqual(data[2][0], '2021-02-02')
-        self.assertEqual(data[3][0], '2021-02-03')
-        self.assertEqual(data[4][0], '2021-02-04')
-        self.assertEqual(data[5][0], '2021-02-05')
-        self.assertEqual(data[6][0], '2021-02-06')
+        self.assertEqual(data[0][0], '31-01-2021')
+        self.assertEqual(data[1][0], '01-02-2021')
+        self.assertEqual(data[2][0], '02-02-2021')
+        self.assertEqual(data[3][0], '03-02-2021')
+        self.assertEqual(data[4][0], '04-02-2021')
+        self.assertEqual(data[5][0], '05-02-2021')
+        self.assertEqual(data[6][0], '06-02-2021')
 
         # Test for sum of amount is the same
         self.assertEqual(data[0][1], 0)
