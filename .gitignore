@@ -21,3 +21,4 @@ secrets.py
 .DS_Store
 
 advanced_booking/payment/resources/rendered_tickets/
+.vscode/
