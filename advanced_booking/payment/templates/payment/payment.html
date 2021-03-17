@@ -1,18 +1,19 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'payment/base.html' %}
 
-<h1>{{ title }}</h1>
+{% load crispy_forms_tags %}
 
-<form action="{{ action }}" method="POST">
-	{% csrf_token %}
-	{{ form }}
-	<button type="submit">{{ buttonText }}</button>
+{% block content %}
 
+<div class="container">
+    <div class="card border-0 my-5"> <!-- display card formatting-->
+      <div class="card-body p-15">
+        <div class="d-flex justify-content-center">
+			<h1>{{ title }}</h1>
+		</div>
+		<form action="{{ action }}" method="POST">
+			{% csrf_token %}
+            {{ form|crispy }}
+			<br>
+			<button type="submit">{{ buttonText }}</button>
 
-</body>
-</html>
+{% endblock %}

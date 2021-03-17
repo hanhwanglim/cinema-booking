@@ -150,7 +150,7 @@ class BookingViewTest(TestCase):
         # Test no authenticated user
         response = self.client.get(reverse('booking'), follow=True)
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, '<title>Login</title>')
+        self.assertContains(response, 'Login')
 
         # Create test user
         test_user_email = 'user1@user1.com'
