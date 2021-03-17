@@ -12,8 +12,6 @@ import payment
 # adjust discount for each type here.
 from advanced_booking import settings
 
-ticket_value = {'CHILD': 5, 'ADULT': 5, 'SENIOR': 5 * 0.8}  # map ticket type to ticket values
-
 
 def create_new_ticket(seat_id, showtime_id, ticket_type):
     """
@@ -23,7 +21,8 @@ def create_new_ticket(seat_id, showtime_id, ticket_type):
         # create a new ticket
         # print("ticket_type is:")
         # print(ticket_type)
-        new_ticket = Ticket.objects.create(seat_id=seat_id, showtime_id=showtime_id, type=ticket_type)
+        new_ticket = Ticket.objects.create(
+            seat_id=seat_id, showtime_id=showtime_id, type=ticket_type)
         return new_ticket
 
 
@@ -103,7 +102,7 @@ def cart(request):
         # FIXME: if front-end just want tickets in the cart, do:
         tickets = cart.ticket.all()
 
-        amount = sum(ticket_value[ticket.type] for ticket in tickets)
+        amount = sum(ticket.price for ticket in tickets)
 
         context = {
             "cart": cart,
@@ -137,7 +136,7 @@ def book_ticket(user, card):
     if trigger:
         return False
 
-    amount = sum(ticket_value[ticket.type] for ticket in tickets)
+    amount = sum(ticket.price for ticket in tickets)
     order = Order.objects.create(
         user=user,
         card=card.__str__(),
@@ -172,11 +171,13 @@ def sendticket(order):
         path = os.path.dirname(payment.__file__)
 
         for ticket in order.tickets.all():
-            mail.attach_file(f'{path}/resources/rendered_tickets/ticket{ticket.id}.pdf')
+            mail.attach_file(
+                f'{path}/resources/rendered_tickets/ticket{ticket.id}.pdf')
         mail.send()
         print("Success: Sent tickets to useremail.")
     except:
-        print('Error: Failed to send email: CAN NOT attach files')  ## big or corrupt
+        # big or corrupt
+        print('Error: Failed to send email: CAN NOT attach files')
 
 
 def checkout(request):
@@ -188,10 +189,12 @@ def checkout(request):
         if form.is_valid:
             card = form.save()
             if book_ticket(request.user, card) == False:
-                messages.error(request, 'Some tickets are unavailable. Please try again.')
+                messages.error(
+                    request, 'Some tickets are unavailable. Please try again.')
                 return redirect('cart')
 
-            messages.success(request, 'Successfully booked tickets. Check email for your tickets. ')
+            messages.success(
+                request, 'Successfully booked tickets. Check email for your tickets. ')
             return redirect('booking')
     else:
         form = CardForm()
