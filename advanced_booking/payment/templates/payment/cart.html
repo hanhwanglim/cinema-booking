@@ -2,7 +2,13 @@
 
 {% load crispy_forms_tags %}
 
-{% block content %}
+{% for ticket in tickets.all %}
+<ul>
+    <li>{{ ticket }} - {{ ticket.showtime }} - {{ ticket.price }}</li>
+</ul>
+{% endfor %}
+<h1>Amount:{{ amount }}</h1>
+<a href="/checkout">checkout</a>
 
 <div class="container">
     <div class="card border-0 my-5"> <!-- display card formatting-->

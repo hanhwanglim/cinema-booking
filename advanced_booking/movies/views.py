@@ -33,12 +33,15 @@ def movie(request, movie_id):
         if form.is_valid():
             print("SelectDatetimeForm is valid")
             selected_showtime_id = form.cleaned_data['selected_showtime']
-            return redirect('seat', selected_showtime_id)
+            if request.user.is_authenticated:
+                return redirect('seat', selected_showtime_id)
+            else:
+                return redirect('login')
         else:
             print(" Not a valid SelectDatetimeForm")
     else:
         # create a Datatime form for the current page movie
-        form = SelectDatetimeForm(movie_id=1)
+        form = SelectDatetimeForm(movie_id=movie_id)
         # add form to conext
         context['form'] = form
 
@@ -67,10 +70,10 @@ def seat(request, showtime_id):
                 # add cart for login user
                 if request.user.is_authenticated:
                     current_user = request.user
-                    #create ticket and add to cart
+                    # create ticket and add to cart
                     print("successfully created a ticket and added to cart")
                     return redirect(add_to_cart, seat_id=selected_seat_id, showtime_id=showtime_id,
-                                    ticket_type= ticket_type)
+                                    ticket_type=ticket_type)
 
                 else:
                     print("Error: form not valid!")

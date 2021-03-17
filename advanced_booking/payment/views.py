@@ -51,13 +51,13 @@ def add_to_cart(request, seat_id, showtime_id, ticket_type):
                     return redirect('index')
 
             new_ticket = create_new_ticket(seat_id, showtime_id, ticket_type)
-            if ShoppingCart.objects.filter(user=request.user).first():
+            try:
                 cart = ShoppingCart.objects.get(user=request.user)
                 cart.ticket.add(new_ticket)
-            else:
+            except:
                 cart = ShoppingCart.objects.create(user=request.user)
                 cart.ticket.add(new_ticket)
-            cart.save()
+                cart.save()
             return redirect('cart')
         else:
             messages.error(request, "Can't create ticket"
