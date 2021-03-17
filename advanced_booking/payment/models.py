@@ -47,6 +47,9 @@ class Ticket(models.Model):
             'SENIOR': 5 * 0.8
         }
         self.price = ticket_value[self.type]
+        # If the seat is a vip seat we increase the price by 1.5x
+        if self.seat.vip:
+            self.price = self.price * 1.5
         super().save(*args, **kwargs)
 
 
