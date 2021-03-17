@@ -10,7 +10,7 @@
 
 {% for ticket in tickets.all %}
 <ul>
-    <li>{{ ticket }} - {{ ticket.showtime }}</li>
+    <li>{{ ticket }} - {{ ticket.showtime }} - {{ ticket.price }}</li>
 </ul>
 {% endfor %}
 <h1>Amount:{{ amount }}</h1>

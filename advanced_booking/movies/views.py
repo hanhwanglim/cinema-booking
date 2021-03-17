@@ -38,7 +38,7 @@ def movie(request, movie_id):
             print(" Not a valid SelectDatetimeForm")
     else:
         # create a Datatime form for the current page movie
-        form = SelectDatetimeForm(movie_id=1)
+        form = SelectDatetimeForm(movie_id=movie_id)
         # add form to conext
         context['form'] = form
 
