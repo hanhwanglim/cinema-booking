@@ -1,23 +1,23 @@
 from django.contrib import admin
 
-from .models import ShoppingCart, Ticket, CardDetails, Order
+from .models import ShoppingCart, Ticket, CardDetail, Order
 from movies.models import Movie
 from halls.models import Hall, Seat, Showtime
 
 
 # Register your models here.
 class TicketInterface(admin.ModelAdmin):
-    list_display = ('__str__', 'showtime', 'seat', 'age')
-    search_fields = ['age', 'seat', 'showtime']
+    list_display = ('__str__', 'showtime', 'seat', 'type')
+    search_fields = ['type', 'seat', 'showtime']
     readonly_fields = ()
     filter_horizontal = ()
     list_filter = ()
     fieldsets = ()
 
 
-class CardDetailsInterface(admin.ModelAdmin):
-    list_display = ('__str__', 'user', 'first4Digits', 'name')
-    search_fields = ['user', 'name']
+class CardDetailInterface(admin.ModelAdmin):
+    list_display = ('__str__', 'card_holder_name')
+    search_fields = ['user', 'card_holder_name']
     readonly_fields = ()
     filter_horizontal = ()
     list_filter = ()
@@ -25,7 +25,7 @@ class CardDetailsInterface(admin.ModelAdmin):
 
 
 class OrderInterface(admin.ModelAdmin):
-    list_display = ('__str__', 'user', 'Card', 'get_tickets', 'order_status', 'amount')
+    list_display = ('__str__', 'user', 'card', 'get_tickets', 'order_status', 'amount', 'date_created')
     search_fields = ['user', 'tickets']
     readonly_fields = ()
     filter_horizontal = ()
@@ -47,6 +47,6 @@ class ShoppingCartInterface(admin.ModelAdmin):
 
 
 admin.site.register(Ticket, TicketInterface)
-admin.site.register(CardDetails, CardDetailsInterface)
+admin.site.register(CardDetail, CardDetailInterface)
 admin.site.register(Order, OrderInterface)
 admin.site.register(ShoppingCart)

@@ -1,11 +1,15 @@
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
+from django.contrib import messages
 from payment.forms import SelectDatetimeForm, SelectSeatForm
 from .models import Movie
 from halls.models import Showtime
+from payment.views import add_to_cart
+from payment.models import Order, ShoppingCart
 
 
 def index(request):
+    messages.get_messages(request)
     movie_list = Movie.objects.all()
     context = {
         'movie_list': movie_list,
@@ -18,8 +22,6 @@ def movie(request, movie_id):
         movie = Movie.objects.get(pk=movie_id)
     except:
         return index(request)
-
-
 
     context = {
         'movie': movie,
@@ -52,7 +54,7 @@ def seat(request, showtime_id):
         movie = showtime.movie
         hall = showtime.hall
 
-        #TODO: add required info for front-end
+        # TODO: add required info for front-end
         context['movie'] = movie
         context['hall'] = hall
         if request.method == 'POST':
@@ -61,8 +63,18 @@ def seat(request, showtime_id):
             if form.is_valid():
                 print("SelectSeatForm is valid")
                 selected_seat_id = form.cleaned_data['selected_seats']
-                ##TODO: redirect to Cart page.
-                return redirect('index')
+                ticket_type = form.cleaned_data['ticket_type']
+                # add cart for login user
+                if request.user.is_authenticated:
+                    current_user = request.user
+                    #create ticket and add to cart
+                    print("successfully created a ticket and added to cart")
+                    return redirect(add_to_cart, seat_id=selected_seat_id, showtime_id=showtime_id,
+                                    ticket_type= ticket_type)
+
+                else:
+                    print("Error: form not valid!")
+                    return redirect('index')
             else:
                 print(" Not a valid SelectDatetimeForm")
         else:
@@ -70,6 +82,5 @@ def seat(request, showtime_id):
             form = SelectSeatForm(showtime_id=showtime_id)
             # add form to conext
             context['form'] = form
-
 
     return render(request, 'movies/seat.html', context)

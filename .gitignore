@@ -1,12 +1,23 @@
 __pycache__/
 
+# IDE files
+.idea/
+.vscode/
+
 
 # Only for Development only
 **/migrations/**
 !**/migrations
 !**/migrations/__init__.py
-.idea/
+secrets.py
+*.sqlite3
 
 /builds
 /cache
-.vscode/
+
+
+*.pdf
+
+.DS_Store
+
+advanced_booking/payment/resources/rendered_tickets/
