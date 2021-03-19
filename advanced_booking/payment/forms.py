@@ -51,6 +51,7 @@ class SelectSeatForm(forms.Form):
     def __init__(self, *args, **kwargs):
         showtime_id = kwargs.pop('showtime_id', None)
         super(SelectSeatForm, self).__init__(*args, **kwargs)
+        self.initial['ticket_type'] = "ADULT"
 
         # use showtime to grab all available seats
         if showtime_id:
