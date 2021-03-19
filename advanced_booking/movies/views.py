@@ -60,6 +60,7 @@ def seat(request, showtime_id):
         # TODO: add required info for front-end
         context['movie'] = movie
         context['hall'] = hall
+
         if request.method == 'POST':
             form = SelectSeatForm(request.POST, showtime_id=showtime_id)
 
