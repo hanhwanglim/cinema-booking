@@ -9,6 +9,7 @@ from .models import CardDetail
 class CardForm(ModelForm):
     """Simple card form to create new card"""
     save_card = forms.BooleanField(required=False)
+
     # TODO add validations
 
     def save(self, commit=True):
@@ -67,3 +68,17 @@ class SelectSeatForm(forms.Form):
     )
 
     ticket_type = forms.ChoiceField(choices=AGE_CHOICES)
+
+
+class QuickCheckoutForm(forms.Form):
+    """
+    list all payment for user
+    """
+
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
+        super(QuickCheckoutForm, self).__init__(*args, **kwargs)
+        if user:
+            cards = CardDetail.objects.filter(user=user).all()
+            self.fields['card'] = forms.ChoiceField(
+                choices=tuple([(c, c) for c in cards]))

@@ -5,6 +5,7 @@ from django.core.mail import send_mail, EmailMessage
 from .forms import CardForm
 from movies.models import Movie
 from halls.models import Showtime
+from .forms import QuickCheckoutForm
 from .models import Ticket, Order, ShoppingCart, CardDetail
 from .create_ticket_image import ticket_info, generate_ticket
 import os
@@ -96,19 +97,44 @@ def cart(request):
             cart = ShoppingCart.objects.get(user=current_user)
         except:
             cart = ShoppingCart.objects.create(user=request.user)
-
-        cart = ShoppingCart.objects.get(user=current_user)
+            cart = ShoppingCart.objects.get(user=current_user)
 
         # FIXME: if front-end just want tickets in the cart, do:
         tickets = cart.ticket.all()
 
         amount = sum(ticket.price for ticket in tickets)
 
-        context = {
-            "cart": cart,
-            "tickets": tickets,
-            "amount": amount
-        }
+        # based on users' saved card info to choose whether show the quick checkout
+        if CardDetail.objects.filter(user=current_user).all():
+
+            form = QuickCheckoutForm(request.POST, user=current_user.id)
+            if request.method == 'POST':
+                if form.is_valid():
+                    print("QuickCheckoutForm is valid")
+                    card = form.cleaned_data['card']
+                    if request.user.is_authenticated:
+                        book_ticket(current_user,card)
+                        messages.success(
+                            request, 'Successfully booked tickets. Check email for your tickets. ')
+                        return redirect('booking')
+                    else:
+                        return redirect('login')
+                else:
+                    print(" Not a valid QuickCheckoutForm")
+            else:
+                context = {
+                    "cart": cart,
+                    "tickets": tickets,
+                    "amount": amount,
+                    "form": form
+                }
+
+        else:
+            context = {
+                "cart": cart,
+                "tickets": tickets,
+                "amount": amount
+            }
         return render(request, 'payment/cart.html', context)
         # add ticket to context
     else:
@@ -127,7 +153,7 @@ def book_ticket(user, card):
 
     tickets = cart.ticket.all()
 
-    trigger = 0  # inital trigger
+    trigger = 0  # initial trigger
     for ticket in tickets:
         if ticket.seat.status == 'X':  # any ticket has been booked
             cart.ticket.remove(ticket)
@@ -175,9 +201,11 @@ def sendticket(order):
                 f'{path}/resources/rendered_tickets/ticket{ticket.id}.pdf')
         mail.send()
         print("Success: Sent tickets to useremail.")
+        return True
     except:
         # big or corrupt
         print('Error: Failed to send email: CAN NOT attach files')
+        return False
 
 
 def checkout(request):
