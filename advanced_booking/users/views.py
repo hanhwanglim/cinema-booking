@@ -2,12 +2,15 @@ from django.http import HttpResponse, Http404
 from django.shortcuts import redirect, render
 from django.urls.base import reverse
 from django.contrib.auth import views
+from django.contrib import messages
+from django.core.mail import send_mail
 from django.template.loader import render_to_string
 
 from .models import User
-from payment.models import Order,Ticket
+from payment.models import Order, Ticket
 from .forms import RegisterForm
-from django.core.mail import send_mail
+from payment.views import sendticket
+
 import payment
 import os
 
@@ -49,6 +52,7 @@ def register(request):
 
 
 def booking(request):
+    messages.get_messages(request)
     if request.user.is_authenticated:
         current_user = request.user
         user_order = Order.objects.filter(user=current_user)
@@ -58,6 +62,28 @@ def booking(request):
         }
         return render(request, 'users/booking.html', context)
     return redirect(reverse('login'))
+
+
+def resend_ticket(request, order_id):
+    """
+    retrieve order and sent tickets to user's email
+    """
+    if request.user.is_authenticated:
+        current_user = request.user
+        try:
+            order = Order.objects.get(id=order_id)
+            # verify if the order belongs to current user then send ticekts
+            if order.user == current_user:
+                if sendticket(order):
+                    messages.success(request, "We have sent tickets to your email. "
+                                              "Please check your inbox.")
+                    print("Successfully resend tickets ")
+                else:
+                    messages.error(request, "Failed to send tickets. Please try again later.")
+        except:
+            messages.error(request, "Failed to retrieve your order. Please try again later.")
+
+        return redirect('booking')
 
 
 def verify(request, auth_token):

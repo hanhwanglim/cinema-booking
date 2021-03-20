@@ -61,16 +61,16 @@ def generate_ticket(ticket_info):
     path = os.path.dirname(payment.__file__)
     # write pdf
     try:
-        ticketImage.save(f"{path}/resources/rendered_tickets/ticket{ticket_id}.pdf")
+        ticketImage.save(f"{path}/static/rendered_tickets/ticket{ticket_id}.pdf")
     except:
-        os.remove(f"{path}/resources/rendered_tickets/ticket{ticket_id}.pdf")
-        ticketImage.save(f"{path}/resources/rendered_tickets/ticket{ticket_id}.pdf")
+        os.remove(f"{path}/static/rendered_tickets/ticket{ticket_id}.pdf")
+        ticketImage.save(f"{path}/static/rendered_tickets/ticket{ticket_id}.pdf")
     # write image
     try:
-        ticketImage.save(f"{path}/resources/rendered_tickets/ticket{ticket_id}.png")
+        ticketImage.save(f"{path}/static/rendered_tickets/ticket{ticket_id}.png")
     except:
-        os.remove(f"{path}/resources/rendered_tickets/ticket{ticket_id}.png")
-        ticketImage.save(f"{path}/resources/rendered_tickets/ticket{ticket_id}.png")
+        os.remove(f"{path}/static/rendered_tickets/ticket{ticket_id}.png")
+        ticketImage.save(f"{path}/static/rendered_tickets/ticket{ticket_id}.png")
 
 
 def ticket_info(ticket):
