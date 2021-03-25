@@ -10,7 +10,8 @@ class UserAdminInterface(UserAdmin):
     readonly_fields = ('date_joined', 'last_login')
 
     filter_horizontal = ()
-    list_filter = ()
+    list_filter = ('is_admin', 'is_staff')
     fieldsets = ()
+
 
 admin.site.register(User, UserAdminInterface)

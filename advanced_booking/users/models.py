@@ -3,7 +3,7 @@ import datetime
 
 from django.db import models
 from django.utils import timezone
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+from django.contrib.auth.models import AbstractUser, BaseUserManager
 
 
 class UserAccountManager(BaseUserManager):
@@ -35,7 +35,7 @@ class UserAccountManager(BaseUserManager):
         return user
 
 
-class User(AbstractBaseUser):
+class User(AbstractUser):
     ########################## DO NOT CHANGE ##########################
     # Django default user fields
     email = models.EmailField(verbose_name="email", max_length=60, unique=True)
@@ -82,13 +82,3 @@ class User(AbstractBaseUser):
         if token == self.auth_token:
             self.verified = True
         return self.verified
-
-
-    ########################## DO NOT CHANGE ##########################
-    def has_perm(self, perm, obj=None):
-        return self.is_admin
-
-    def has_module_perms(self, app_label):
-        return True
-
-    ###################################################################
