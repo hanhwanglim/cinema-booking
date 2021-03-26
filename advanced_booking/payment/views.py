@@ -113,10 +113,14 @@ def cart(request):
                     print("QuickCheckoutForm is valid")
                     card = form.cleaned_data['card']
                     if request.user.is_authenticated:
-                        print('Book ticket status:' +str(book_ticket(current_user, card)))
-                        messages.success(
-                            request, 'Successfully booked tickets. Check email for your tickets. ')
-                        return redirect('booking')
+                        if book_ticket(current_user, card):
+                            messages.success(
+                                request, 'Successfully booked tickets. Check email for your tickets. ')
+                            return redirect('booking')
+                        else:
+                            messages.error(
+                                request, "Booking Failed: Some tickets aren't available anymore... Please try again ")
+                            return redirect('cart')
                     else:
                         return redirect('login')
                 else:
@@ -179,6 +183,7 @@ def book_ticket(user, card):
         generate_ticket(ticket_info(ticket, user.get_full_name()))
 
     cart.delete()
+    sendticket(order)
 
     return True
 
@@ -188,23 +193,25 @@ def sendticket(order):
     Send ticket to user
     """
 
+    print("Trying to send tickets for order" + str(order.id))
+    print("Trying to send to:" + str(order.user))
+    subject = "Your order" + str(order.id) + "(Digital ticketed included)"
+    mail = EmailMessage(subject,
+                        'Thank you for booking with us.',
+                        settings.EMAIL_HOST_USER,
+                        [order.user])
+    # path = os.path.dirname(payment.__file__)
     try:
-        subject = "Your order" + str(order.id) + "(Digital ticketed included)"
-        mail = EmailMessage(subject,
-                            'Thank you for booking with us.',
-                            settings.EMAIL_HOST_USER,
-                            [order.user.mail])
-        path = os.path.dirname(payment.__file__)
-
         for ticket in order.tickets.all():
+            print("Trying to attach" + f"ticket{ticket.id}.pdf")
             mail.attach_file(
-                f'{path}/resources/rendered_tickets/ticket{ticket.id}.pdf')
+                f"payment/static/rendered_tickets/ticket{ticket.id}.pdf")
         mail.send()
-        print("Success: Sent tickets to useremail.")
+        print("Success: Sent tickets to user's email.")
         return True
     except:
         # big or corrupt
-        print('Error: Failed to send email: CAN NOT attach files')
+        print("Error: Failed to send email: CAN NOT attach files")
         return False
 
 
