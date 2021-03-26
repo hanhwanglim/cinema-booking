@@ -113,7 +113,7 @@ def cart(request):
                     print("QuickCheckoutForm is valid")
                     card = form.cleaned_data['card']
                     if request.user.is_authenticated:
-                        book_ticket(current_user,card)
+                        print('Book ticket status:' +str(book_ticket(current_user, card)))
                         messages.success(
                             request, 'Successfully booked tickets. Check email for your tickets. ')
                         return redirect('booking')
@@ -176,7 +176,7 @@ def book_ticket(user, card):
         ticket.seat.save()
         ticket.save()
         # generate tickets
-        generate_ticket(ticket_info(ticket))
+        generate_ticket(ticket_info(ticket, user.get_full_name()))
 
     cart.delete()
 

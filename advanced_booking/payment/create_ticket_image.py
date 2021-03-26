@@ -38,7 +38,7 @@ def generate_ticket(ticket_info):
     # add qr code
     input_data = "Movie:" + ticket_info["title"] + "; Date:" + ticket_info["date"] + \
                  "; Time" + ticket_info["time"] + "; Row :" + ticket_info["seat_row"] + \
-                 "; Seat Number: " + ticket_info["seat_number"]
+                 "; Seat Number: " + ticket_info["seat_number"] + "; Booking Under: " + ticket_info["user_fullname"]
 
     qr_image_size = 10
     qr = qrcode.QRCode(
@@ -73,7 +73,7 @@ def generate_ticket(ticket_info):
         ticketImage.save(f"{path}/static/rendered_tickets/ticket{ticket_id}.png")
 
 
-def ticket_info(ticket):
+def ticket_info(ticket, user_fullname):
     movie_title = ticket.showtime.movie.title
     certificate = ticket.showtime.movie.certificate
     movie_date = ticket.showtime.time.date().strftime("%m/%d/%Y")
@@ -94,7 +94,8 @@ def ticket_info(ticket):
             "ticket_type": ticket_type,
             "seat_row": row_number,
             "seat_number": seat_number,
-            "ticket_id": ticket_id
+            "ticket_id": ticket_id,
+            "user_fullname": str(user_fullname)
             }
 
 # if __name__ == "__main__":
