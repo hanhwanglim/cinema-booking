@@ -223,7 +223,7 @@ def checkout(request):
         form = CardForm(request.POST)
         if form.is_valid:
             card = form.save()
-            if book_ticket(request.user, card) == False:
+            if not book_ticket(request.user, card):
                 messages.error(
                     request, 'Some tickets are unavailable. Please try again.')
                 return redirect('cart')
