@@ -1,5 +1,6 @@
 from django import forms
 from django.forms import ModelForm
+import datetime
 
 from movies.models import Movie
 from halls.models import Showtime, Seat
@@ -39,6 +40,10 @@ class SelectDatetimeForm(forms.Form):
 
         # use movie_id to query available_datetime
         if movie_id:
+            # For demo purpose : only show Showtime after right now.
+            # available_datetime = Showtime.objects.all().filter(movie_id=movie_id).filter(
+            #     time__gt=datetime.datetime.now())
+            # for debugging purpose : above query is replaced by showing all Showtimes
             available_datetime = Showtime.objects.all().filter(movie_id=movie_id)
             self.fields['selected_showtime'] = forms.ChoiceField(
                 choices=tuple([(a_time.id, a_time) for a_time in available_datetime]))
