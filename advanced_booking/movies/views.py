@@ -8,6 +8,7 @@ from payment.views import add_to_cart
 from payment.models import Order, ShoppingCart
 import operator
 
+
 def index(request):
     messages.get_messages(request)
     movie_list = Movie.objects.all()
@@ -49,6 +50,10 @@ def movie(request, movie_id):
 
 
 def seat(request, showtime_id):
+    """
+    view function for the seat choosing page
+    """
+    messages.get_messages(request)
     context = {
 
     }
@@ -63,7 +68,7 @@ def seat(request, showtime_id):
         context['hall'] = hall
         if request.method == 'POST':
             form = SelectSeatForm(request.POST, showtime_id=showtime_id)
-            
+
             if form.is_valid():
                 name = request.POST.get('seats')
                 print(name)
@@ -76,9 +81,11 @@ def seat(request, showtime_id):
                     current_user = request.user
                     # create ticket and add to cart
                     print("successfully created a ticket and added to cart")
-                    return redirect(add_to_cart, seat_id=name, showtime_id=showtime_id,
-                                    ticket_type=ticket_type)
-
+                    messages.success(request, "successfully added your chosen ticket to the cart.")
+                    add_to_cart(request, name, showtime_id, ticket_type)
+                    # return redirect(add_to_cart, seat_id=name, showtime_id=showtime_id,
+                    #                 ticket_type=ticket_type)
+                    return redirect('seat', showtime_id=showtime_id)
                 else:
                     print("Error: form not valid!")
                     return redirect('index')
@@ -89,7 +96,6 @@ def seat(request, showtime_id):
             form = SelectSeatForm(showtime_id=showtime_id)
             # add form to conext
             seats = Seat.objects.all().filter(showtime_id=showtime_id)
-
 
             current_user = request.user
 
@@ -112,7 +118,7 @@ def seat(request, showtime_id):
                         flag = 1
                         y.seat.status = '*'
                         view_tickets.append(y.seat)
-                      
+
                 if (flag == 0):
                     view_tickets.append(x)
 
@@ -129,44 +135,44 @@ def seat(request, showtime_id):
     return render(request, 'movies/seat.html', context)
 
 
-
 def search(request):
-    #search functionality
-    srch = request.GET['query']#search value
-    sort = request.GET['sort']#sort value
-    search_for = request.GET['search_for']#"search by" value
-    #next 6 lines for "sort by" functionality
+    # search functionality
+    srch = request.GET['query']  # search value
+    sort = request.GET['sort']  # sort value
+    search_for = request.GET['search_for']  # "search by" value
+    # next 6 lines for "sort by" functionality
     if search_for == 'title':
         movies = Movie.objects.filter(title__icontains=srch)
     if search_for == 'director':
         movies = Movie.objects.filter(director__icontains=srch)
     if search_for == 'lead_actor':
         movies = Movie.objects.filter(lead_actor__icontains=srch)
-    #default sort
+    # default sort
     movies = sorted(movies, key=operator.attrgetter('title'))
-    #next 16 lines for sort functionality
+    # next 16 lines for sort functionality
     if sort == 'A-Z':
         movies = sorted(movies, key=operator.attrgetter('title'))
     if sort == 'Z-A':
         movies = sorted(movies, key=operator.attrgetter('title'), reverse=True)
     if sort == 'year(1-9)':
-        movies = sorted(movies, key=operator.attrgetter('premier_date')) 
+        movies = sorted(movies, key=operator.attrgetter('premier_date'))
     if sort == 'year(9-1)':
-        movies = sorted(movies, key=operator.attrgetter('premier_date'), reverse=True) 
+        movies = sorted(movies, key=operator.attrgetter('premier_date'), reverse=True)
     if sort == 'duration(1-9)':
-        movies = sorted(movies, key=operator.attrgetter('duration')) 
+        movies = sorted(movies, key=operator.attrgetter('duration'))
     if sort == 'duration(9-1)':
         movies = sorted(movies, key=operator.attrgetter('duration'), reverse=True)
     if sort == 'rating(1-9)':
         movies = sorted(movies, key=operator.attrgetter('rating'))
     if sort == 'rating(9-1)':
         movies = sorted(movies, key=operator.attrgetter('rating'), reverse=True)
-    #final parameters for form
+    # final parameters for form
     params = {'movies': movies,
               'search': srch}
     return render(request, 'movies/search_result.html', params)
 
-#temp view for the search bar.
-#!!!!!Must be deleted after transfer !!!!!!!
+
+# temp view for the search bar.
+# !!!!!Must be deleted after transfer !!!!!!!
 def searchbar(request):
-    return render(request,'movies/search.html')
+    return render(request, 'movies/search.html')
