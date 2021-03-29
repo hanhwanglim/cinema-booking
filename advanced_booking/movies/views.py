@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from payment.forms import SelectDatetimeForm, SelectSeatForm
 from .models import Movie
-from halls.models import Showtime
+from halls.models import Showtime, Seat
 from payment.views import add_to_cart
 from payment.models import Order, ShoppingCart
 import operator
@@ -56,24 +56,27 @@ def seat(request, showtime_id):
         showtime = Showtime.objects.get(pk=showtime_id)
         movie = showtime.movie
         hall = showtime.hall
+        seats = Seat.objects.all().filter(showtime_id=showtime_id)
 
         # TODO: add required info for front-end
         context['movie'] = movie
         context['hall'] = hall
-
         if request.method == 'POST':
             form = SelectSeatForm(request.POST, showtime_id=showtime_id)
-
+            
             if form.is_valid():
+                name = request.POST.get('seats')
+                print(name)
                 print("SelectSeatForm is valid")
                 selected_seat_id = form.cleaned_data['selected_seats']
+                print(selected_seat_id)
                 ticket_type = form.cleaned_data['ticket_type']
                 # add cart for login user
                 if request.user.is_authenticated:
                     current_user = request.user
                     # create ticket and add to cart
                     print("successfully created a ticket and added to cart")
-                    return redirect(add_to_cart, seat_id=selected_seat_id, showtime_id=showtime_id,
+                    return redirect(add_to_cart, seat_id=name, showtime_id=showtime_id,
                                     ticket_type=ticket_type)
 
                 else:
@@ -85,7 +88,43 @@ def seat(request, showtime_id):
             # create a Datatime form for the current page movie
             form = SelectSeatForm(showtime_id=showtime_id)
             # add form to conext
+            seats = Seat.objects.all().filter(showtime_id=showtime_id)
+
+
+            current_user = request.user
+
+            try:
+                cart = ShoppingCart.objects.get(user=request.user)
+            except:
+                cart = ShoppingCart.objects.create(user=request.user)
+                cart = ShoppingCart.objects.get(user=current_user)
+                cart.save()
+
+            tickets = cart.ticket.all()
+
+            view_tickets = []
+
+            flag = 0
+            for x in seats:
+                for y in tickets:
+                    if (y.seat.id == x.id):
+                        print(str(y.seat.id) + " " + str(x.id))
+                        flag = 1
+                        y.seat.status = '*'
+                        view_tickets.append(y.seat)
+                      
+                if (flag == 0):
+                    view_tickets.append(x)
+
+                else:
+                    flag = 0
+            for same in view_tickets:
+                for y in tickets:
+                    if (y.seat.id == same.id and same.status == 'O'):
+                        view_tickets.remove(same)
             context['form'] = form
+            context['seatlist'] = view_tickets
+            context['tickets'] = tickets
 
     return render(request, 'movies/seat.html', context)
 
