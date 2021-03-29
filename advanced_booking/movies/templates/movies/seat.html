@@ -21,13 +21,25 @@
                                 {% endfor %}
                             </ul><br>
                             {% for seats in seatlist %}
-                               
-                                    <div  style="display:inline;">
-                                        <button class="seatbutton" type="submit" name="seats" value="{{ seats.id }}">
-                                           {{ seats }}
+                                {% if seats.status == 'X' %}
+                                    <div class="seat" style="display:inline;">
+                                        <button disabled class="seatbutton" type="submit" name="seats" value="{{ seats.id }}">
+                                            <img class="seatpic" src="{% static 'movies/' %}cinemaseatred.png">
                                         </button>
                                     </div>
-                            
+                                {% elif seats.status == '*' %}
+                                    <div class="seat" style="display:inline;">
+                                        <button disabled class="seatbutton" type="submit" name="seats" value="{{ seats.id }}">
+                                            <img class="seatpic" src="{% static 'movies/' %}cinemaseatgreen.png">
+                                        </button>
+                                    </div>
+                                {% elif seats.status == 'O' %}
+                                    <div class="seat" style="display:inline;">
+                                        <button class="seatbutton" type="submit" name="seats" value="{{ seats.id }}">
+                                            <img class="seatpic" src="{% static 'movies/' %}cinemaseatwhite.png">
+                                        </button>
+                                    </div>
+                                {% endif %}
                             {% endfor %}
 
                         </div>
