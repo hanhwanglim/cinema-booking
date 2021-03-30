@@ -17,27 +17,28 @@ def get_income_between(start_date, end_date):
         , ...
     ]
     """
-    # Create an array with all the days within our range
-    current_date = start_date.date()
-    dates = []
-    while(current_date <= end_date.date()):
-        dates.append([current_date, 0])
-        current_date += timedelta(days=1)
-
     # Because the query would be today : 00:00:00 it would not get
     # todays things.
     end_date = end_date + timedelta(days=1) - timedelta(microseconds=1)
     order = Order.objects.filter(date_created__range=[start_date, end_date])
 
+    dates = []
+    amount = []
+
     # Creating array of dates from start date to end date
     for o in order:
-        index = o.date_created.date() - start_date.date()
-        dates[index.days][1] += o.amount
+        try:
+            index = dates.index(o.date_created.date())
+            amount[index] += o.amount
+        except:
+            dates.append(o.date_created.date())
+            amount.append(o.amount)
 
     # Formatting the data for JavaScript parsing
     data_format = []
-    for d in dates:
-        data_format.append([f'{d[0].strftime("%d-%m-%Y")}', d[1]])
+    for i in range(len(dates)):
+        data_format.append(
+            [f'new Date({dates[i].year},{dates[i].month - 1},{dates[i].day})', amount[i]])
 
     return data_format
 
@@ -113,30 +114,31 @@ def movie_income(request, movie_id):
 def create_comparison(start_date, end_date):
     end_date = end_date + timedelta(days=1) - timedelta(microseconds=1)
     tickets = Ticket.objects.filter(date_created__range=[start_date, end_date])
-    data = []
     dates = []
     movies = []
 
     for t in tickets:
-        try:
-            index = dates.index(t.date_created.date())
-            d = data[index]
-        except:
-            dates.append(t.date_created.date())
-            d = [0 for i in range(len(movies)+1)]
-            d[0] = t.date_created.date()
-            data.append(d)
-        try:
-            index = movies.index(t.showtime.movie)
-            d[index + 1] += t.price
-        except:
+        if t.showtime.movie not in movies:
             movies.append(t.showtime.movie)
-            d.append(t.price)
+        if t.date_created.date() not in dates:
+            dates.append(t.date_created.date())
+
+    data = [[d] for d in dates]
+
+    for d in data:
+        for i in range(len(movies)):
+            d.append(0)
+
+    for t in tickets:
+        date_index = dates.index(t.date_created.date())
+        movie_index = movies.index(t.showtime.movie)
+        data[date_index][movie_index + 1] += t.price
 
     # Format data
     for i in range(len(data)):
         data[i][0] = f'new Date({data[i][0].year},{data[i][0].month -1},{data[i][0].day})'
-    
+    print(data)
+
     return data, movies
 
 
@@ -146,14 +148,14 @@ def compare(request):
         end_date = datetime.strptime(request.POST['end_date'], '%Y-%m-%d')
 
         data = create_comparison(start_date, end_date)
-        print(data)
+        # print(data)
         context = {
             'start_date': start_date.strftime("%d-%m-%Y"),
             'end_date': end_date.strftime("%d-%m-%Y"),
             'data': data[0],
             'movie': data[1],
-            'format_start_date': f'new Date({start_date.year},{start_date.month -1},{start_date.day})',
-            'format_end_date': f'new Date({end_date.year},{end_date.month -1},{end_date.day})'
+            'format_start_date': f'new Date({start_date.year},{start_date.month -1},{start_date.day - 1})',
+            'format_end_date': f'new Date({end_date.year},{end_date.month -1},{end_date.day + 1})'
         }
         return render(request, 'accounting/compare.html', context)
     else:
@@ -161,13 +163,14 @@ def compare(request):
         end_date = date.today()
 
         data = create_comparison(start_date, end_date)
+        # print(data[1])
         context = {
             'start_date': start_date.strftime("%d-%m-%Y"),
             'end_date': end_date.strftime("%d-%m-%Y"),
             'data': data[0],
             'movie': data[1],
-            'format_start_date': f'new Date({start_date.year},{start_date.month -1},{start_date.day})',
-            'format_end_date': f'new Date({end_date.year},{end_date.month -1},{end_date.day})'
+            'format_start_date': f'new Date({start_date.year},{start_date.month -1},{start_date.day - 1})',
+            'format_end_date': f'new Date({end_date.year},{end_date.month -1},{end_date.day + 1})'
 
         }
         return render(request, 'accounting/compare.html', context)

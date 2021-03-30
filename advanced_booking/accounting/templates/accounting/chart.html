@@ -15,7 +15,7 @@
     function drawDualY() {
       var data = google.visualization.arrayToDataTable([
         ['Date', 'Revenue'],
-        {% for d in data %}{{ d | safe }},
+        {% for d in data %}[{% for element in d %}{{ element }}, {% endfor %}],
         {% endfor %}
       ]);
 

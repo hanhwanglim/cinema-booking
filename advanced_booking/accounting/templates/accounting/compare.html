@@ -13,29 +13,29 @@
     google.charts.setOnLoadCallback(drawDualY);
 
     function drawDualY() {
-      var data = new google.visualization.DataTable();
-      data.addColumn('date', 'Day');
-      {% for m in movie%}data.addColumn('number', '{{m}}');
-      {% endfor %}
-      data.addRows([
-        {% for d in data %}[{% for element in d%}{{element}},{% endfor %}],
-        {% endfor %}
-      ]);
+
+      var data = google.visualization.arrayToDataTable([
+          ['Year', {% for m in movie %}'{{ m }}', {% endfor %}],
+          {% for d in data %}[{% for element in d%}{{ element }},{% endfor %}],
+          {% endfor %}
+        ]);
 
       var options = {
         chart: {
           title: 'Revenue from {{ start_date }} to {{ end_date }}',
+          width: 1200,
+          height: 800
         },
         vAxis: {
             minValue: 0
           },
           
-          hAxis: {
-              viewWindow: {
-                  min: {{ format_start_date }},
-                  max: {{ format_end_date }}
-              }
-          },
+        hAxis: {
+            viewWindow: {
+                min: {{ format_start_date }},
+                max: {{ format_end_date }}
+            }
+        },
       };
 
       var materialChart = new google.charts.Bar(document.getElementById('chart_div'));
