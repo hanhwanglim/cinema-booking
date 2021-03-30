@@ -114,37 +114,30 @@ def movie_income(request, movie_id):
 def create_comparison(start_date, end_date):
     end_date = end_date + timedelta(days=1) - timedelta(microseconds=1)
     tickets = Ticket.objects.filter(date_created__range=[start_date, end_date])
-    data = []
     dates = []
     movies = []
 
     for t in tickets:
-        try:
-            # try to find if date existed in dates array
-            index = dates.index(t.date_created.date())
-            d = data[index]
-        except:
-            # if date is not found in array we create then new date
-            dates.append(t.date_created.date())
-            d = [0 for i in range(len(movies)+1)]
-            d[0] = t.date_created.date()
-            data.append(d)
-        try:
-            # try to find if the movie already existed in movie array
-            index = movies.index(t.showtime.movie)
-            d[index + 1] += t.price
-            print(t, ' in try')
-
-        except:
-            # add movie to array if its not found
-            print(t, ' je')
-
+        if t.showtime.movie not in movies:
             movies.append(t.showtime.movie)
-            d.append(t.price)
+        if t.date_created.date() not in dates:
+            dates.append(t.date_created.date())
+
+    data = [[d] for d in dates]
+
+    for d in data:
+        for i in range(len(movies)):
+            d.append(0)
+
+    for t in tickets:
+        date_index = dates.index(t.date_created.date())
+        movie_index = movies.index(t.showtime.movie)
+        data[date_index][movie_index + 1] += t.price
 
     # Format data
     for i in range(len(data)):
         data[i][0] = f'new Date({data[i][0].year},{data[i][0].month -1},{data[i][0].day})'
+    print(data)
 
     return data, movies
 
@@ -155,14 +148,14 @@ def compare(request):
         end_date = datetime.strptime(request.POST['end_date'], '%Y-%m-%d')
 
         data = create_comparison(start_date, end_date)
-        print(data)
+        # print(data)
         context = {
             'start_date': start_date.strftime("%d-%m-%Y"),
             'end_date': end_date.strftime("%d-%m-%Y"),
             'data': data[0],
             'movie': data[1],
-            'format_start_date': f'new Date({start_date.year},{start_date.month -1},{start_date.day})',
-            'format_end_date': f'new Date({end_date.year},{end_date.month -1},{end_date.day})'
+            'format_start_date': f'new Date({start_date.year},{start_date.month -1},{start_date.day - 1})',
+            'format_end_date': f'new Date({end_date.year},{end_date.month -1},{end_date.day + 1})'
         }
         return render(request, 'accounting/compare.html', context)
     else:
@@ -176,8 +169,8 @@ def compare(request):
             'end_date': end_date.strftime("%d-%m-%Y"),
             'data': data[0],
             'movie': data[1],
-            'format_start_date': f'new Date({start_date.year},{start_date.month -1},{start_date.day})',
-            'format_end_date': f'new Date({end_date.year},{end_date.month -1},{end_date.day})'
+            'format_start_date': f'new Date({start_date.year},{start_date.month -1},{start_date.day - 1})',
+            'format_end_date': f'new Date({end_date.year},{end_date.month -1},{end_date.day + 1})'
 
         }
         return render(request, 'accounting/compare.html', context)
