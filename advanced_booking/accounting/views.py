@@ -17,27 +17,28 @@ def get_income_between(start_date, end_date):
         , ...
     ]
     """
-    # Create an array with all the days within our range
-    current_date = start_date.date()
-    dates = []
-    while(current_date <= end_date.date()):
-        dates.append([current_date, 0])
-        current_date += timedelta(days=1)
-
     # Because the query would be today : 00:00:00 it would not get
     # todays things.
     end_date = end_date + timedelta(days=1) - timedelta(microseconds=1)
     order = Order.objects.filter(date_created__range=[start_date, end_date])
 
+    dates = []
+    amount = []
+
     # Creating array of dates from start date to end date
     for o in order:
-        index = o.date_created.date() - start_date.date()
-        dates[index.days][1] += o.amount
+        try:
+            index = dates.index(o.date_created.date())
+            amount[index] += o.amount
+        except:
+            dates.append(o.date_created.date())
+            amount.append(o.amount)
 
     # Formatting the data for JavaScript parsing
     data_format = []
-    for d in dates:
-        data_format.append([f'{d[0].strftime("%d-%m-%Y")}', d[1]])
+    for i in range(len(dates)):
+        data_format.append(
+            [f'new Date({dates[i].year},{dates[i].month - 1},{dates[i].day})', amount[i]])
 
     return data_format
 
@@ -119,24 +120,32 @@ def create_comparison(start_date, end_date):
 
     for t in tickets:
         try:
+            # try to find if date existed in dates array
             index = dates.index(t.date_created.date())
             d = data[index]
         except:
+            # if date is not found in array we create then new date
             dates.append(t.date_created.date())
             d = [0 for i in range(len(movies)+1)]
             d[0] = t.date_created.date()
             data.append(d)
         try:
+            # try to find if the movie already existed in movie array
             index = movies.index(t.showtime.movie)
             d[index + 1] += t.price
+            print(t, ' in try')
+
         except:
+            # add movie to array if its not found
+            print(t, ' je')
+
             movies.append(t.showtime.movie)
             d.append(t.price)
 
     # Format data
     for i in range(len(data)):
         data[i][0] = f'new Date({data[i][0].year},{data[i][0].month -1},{data[i][0].day})'
-    
+
     return data, movies
 
 
@@ -161,6 +170,7 @@ def compare(request):
         end_date = date.today()
 
         data = create_comparison(start_date, end_date)
+        # print(data[1])
         context = {
             'start_date': start_date.strftime("%d-%m-%Y"),
             'end_date': end_date.strftime("%d-%m-%Y"),
