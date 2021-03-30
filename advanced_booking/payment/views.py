@@ -48,8 +48,8 @@ def add_to_cart(request, seat_id, showtime_id, ticket_type):
                     messages.error(request, "Movie certificate Limitation:"
                                             " can't buy for child")
                     print("Error:Movie Rating Limitation")
-                    return redirect('index')
-
+                    # return redirect('index')
+                    return False
             new_ticket = create_new_ticket(seat_id, showtime_id, ticket_type)
             try:
                 cart = ShoppingCart.objects.get(user=request.user)
@@ -58,17 +58,19 @@ def add_to_cart(request, seat_id, showtime_id, ticket_type):
                 cart = ShoppingCart.objects.create(user=request.user)
                 cart.ticket.add(new_ticket)
                 cart.save()
-            return redirect('cart')
+            # return redirect('cart')
+            return True
         else:
             messages.error(request, "Can't create ticket"
                                     " due to null values")
             print("Error: Can't create ticket due to null values")
-            return redirect('index')
+            # return redirect('index')
+            return False
     else:
         messages.error(request, "Unauthenticated user!")
         print("Error: Unauthenticated user!")
-        return redirect('index')
-
+        # return redirect('index')
+        return False
 
 ##cart view ###
 def remove_from_cart(request, ticket_id):
@@ -113,10 +115,14 @@ def cart(request):
                     print("QuickCheckoutForm is valid")
                     card = form.cleaned_data['card']
                     if request.user.is_authenticated:
-                        book_ticket(current_user,card)
-                        messages.success(
-                            request, 'Successfully booked tickets. Check email for your tickets. ')
-                        return redirect('booking')
+                        if book_ticket(current_user, card):
+                            messages.success(
+                                request, 'Successfully booked tickets. Check email for your tickets. ')
+                            return redirect('booking')
+                        else:
+                            messages.error(
+                                request, "Booking Failed: Some tickets aren't available anymore... Please try again ")
+                            return redirect('cart')
                     else:
                         return redirect('login')
                 else:
@@ -176,9 +182,10 @@ def book_ticket(user, card):
         ticket.seat.save()
         ticket.save()
         # generate tickets
-        generate_ticket(ticket_info(ticket))
+        generate_ticket(ticket_info(ticket, user.get_full_name()))
 
     cart.delete()
+    sendticket(order)
 
     return True
 
@@ -188,23 +195,25 @@ def sendticket(order):
     Send ticket to user
     """
 
+    print("Trying to send tickets for order" + str(order.id))
+    print("Trying to send to:" + str(order.user))
+    subject = "Your order" + str(order.id) + "(Digital ticketed included)"
+    mail = EmailMessage(subject,
+                        'Thank you for booking with us.',
+                        settings.EMAIL_HOST_USER,
+                        [order.user])
+    # path = os.path.dirname(payment.__file__)
     try:
-        subject = "Your order" + str(order.id) + "(Digital ticketed included)"
-        mail = EmailMessage(subject,
-                            'Thank you for booking with us.',
-                            settings.EMAIL_HOST_USER,
-                            [order.user.mail])
-        path = os.path.dirname(payment.__file__)
-
         for ticket in order.tickets.all():
+            print("Trying to attach" + f"ticket{ticket.id}.pdf")
             mail.attach_file(
-                f'{path}/resources/rendered_tickets/ticket{ticket.id}.pdf')
+                f"payment/static/rendered_tickets/ticket{ticket.id}.pdf")
         mail.send()
-        print("Success: Sent tickets to useremail.")
+        print("Success: Sent tickets to user's email.")
         return True
     except:
         # big or corrupt
-        print('Error: Failed to send email: CAN NOT attach files')
+        print("Error: Failed to send email: CAN NOT attach files")
         return False
 
 
@@ -216,7 +225,7 @@ def checkout(request):
         form = CardForm(request.POST)
         if form.is_valid:
             card = form.save()
-            if book_ticket(request.user, card) == False:
+            if not book_ticket(request.user, card):
                 messages.error(
                     request, 'Some tickets are unavailable. Please try again.')
                 return redirect('cart')
