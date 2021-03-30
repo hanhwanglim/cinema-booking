@@ -46,8 +46,9 @@ def add_to_cart(request, seat_id, showtime_id, ticket_type):
             if ticket_type == 'CHILD':
                 if Showtime.objects.get(id=showtime_id).movie.certificate in ["18", "R18"]:
                     messages.error(request, "Movie certificate Limitation:"
-                                            " can't buy for children")
+                                            " can't buy for child")
                     print("Error:Movie Rating Limitation")
+                    # return redirect('index')
                     return False
             new_ticket = create_new_ticket(seat_id, showtime_id, ticket_type)
             try:
@@ -57,18 +58,19 @@ def add_to_cart(request, seat_id, showtime_id, ticket_type):
                 cart = ShoppingCart.objects.create(user=request.user)
                 cart.ticket.add(new_ticket)
                 cart.save()
+            # return redirect('cart')
             return True
         else:
             messages.error(request, "Can't create ticket"
                                     " due to null values")
             print("Error: Can't create ticket due to null values")
+            # return redirect('index')
             return False
     else:
         messages.error(request, "Unauthenticated user!")
         print("Error: Unauthenticated user!")
         # return redirect('index')
         return False
-
 
 ##cart view ###
 def remove_from_cart(request, ticket_id):

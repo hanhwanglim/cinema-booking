@@ -5,7 +5,7 @@ from payment.forms import SelectDatetimeForm, SelectSeatForm
 from .models import Movie
 from halls.models import Showtime, Seat
 from payment.views import add_to_cart
-from payment.models import Order, ShoppingCart
+from payment.models import Order, ShoppingCart, Ticket
 import operator
 
 
@@ -48,6 +48,19 @@ def movie(request, movie_id):
 
     return render(request, 'movies/movie.html', context)
 
+def remove_from_cart(request, ticket_id,showtime_id):
+    if request.user.is_authenticated:
+        current_user = request.user
+        # query the cart
+        cart = ShoppingCart.objects.get(user=current_user)
+        ticket = Ticket.objects.get(id=ticket_id)
+        cart.ticket.remove(ticket)
+        cart.save()
+        return redirect(seat,showtime_id)
+    else:
+        messages.error(request, "failed to remove ticket from cart")
+        print("Error: failed to remove ticket from cart")
+        return redirect('index')
 
 def seat(request, showtime_id):
     """
@@ -83,6 +96,7 @@ def seat(request, showtime_id):
                     print("successfully created a ticket and added to cart")
                     messages.success(request, "successfully added your chosen ticket to the cart.")
                     add_to_cart(request, name, showtime_id, ticket_type)
+                    
                     # return redirect(add_to_cart, seat_id=name, showtime_id=showtime_id,
                     #                 ticket_type=ticket_type)
                     return redirect('seat', showtime_id=showtime_id)
@@ -121,6 +135,7 @@ def seat(request, showtime_id):
 
                 if (flag == 0):
                     view_tickets.append(x)
+                    print( " " + str(x.id))
 
                 else:
                     flag = 0
@@ -131,6 +146,7 @@ def seat(request, showtime_id):
             context['form'] = form
             context['seatlist'] = view_tickets
             context['tickets'] = tickets
+            context['showtime_id'] = showtime_id
 
     return render(request, 'movies/seat.html', context)
 

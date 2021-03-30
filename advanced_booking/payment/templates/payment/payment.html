@@ -3,7 +3,13 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
-
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
 <div class="container">
     <div class="card border-0 my-5"> <!-- display card formatting-->
       <div class="card-body p-15">

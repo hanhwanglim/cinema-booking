@@ -7,5 +7,7 @@ urlpatterns = [
     path('movie/<int:movie_id>/', views.movie, name='movie'),
     path('movie/choose_your_seat/<int:showtime_id>/', views.seat, name='seat'),
     path('search', views.searchbar, name='tempsearchpage'),  # temp path to search bar. Must be deleted after
-    path('search_results', views.search, name='search_results')  # temp path to search results. Must be updated/deleted
+    path('search_results', views.search, name='search_results'),  # temp path to search results. Must be updated/deleted
+    path('seat', views.seat, name='seat'),
+    path('remove_ticket/<int:showtime_id>/ticket<int:ticket_id>',views.remove_from_cart, name = 'remove_from_cart')
 ]

@@ -25,6 +25,7 @@ def generate_ticket(ticket_info):
     # left hand side
     image_editable.text((100, 275), ticket_info["title"], (0, 0, 0), font=title_font)
     image_editable.text((210, 360), ticket_info["certificate"], (0, 0, 0), font=title_font)
+
     image_editable.text((205, 440), ticket_info["date"], (0, 0, 0), font=title_font)
     image_editable.text((205, 490), ticket_info["time"], (0, 0, 0), font=title_font)
     image_editable.text((250, 540), ticket_info["screen"], (0, 0, 0), font=title_font)

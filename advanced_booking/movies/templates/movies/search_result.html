@@ -1,13 +1,28 @@
-
-
-<body>
-	<h1>Search Results:</h1>
-	<ul>
-		{% for movie in movies %}
-		<li>
-			{{ movie.title }}, {{ movie.rating }}
-		</li>
-	{% endfor %}
-	</ul>
-
-</body>
+{% extends 'movies/base.html' %} {% block content %} {% load static %}
+{% if messages %}
+<ul class="messages">
+	{% for message in messages %}
+	<li{% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+		{% endfor %}
+</ul>
+{% endif %}
+<h1>Search Results for '{{search}}':</h1>
+<div class="allfilmscontainer">
+	<div class="row"></div>
+	<div class="col-lg-12">
+		{% if movies %} {% for movie in movies %}
+		<div class="allfilms">
+			<a href="{% url 'movie' movie.id %}">
+				<div class="postercontainer">
+					<img width="auto" height="100%" class="poster" src="{% static 'movies/' %}{{ movie.id }}.jpg">
+				</div>
+				<p class="moviename"><b>{{ movie }}</b></p>
+			</a>
+		</div>
+		{% endfor %} {% else %}
+		<p>No movies are available.</p>
+		{% endif %}
+		<br>
+	</div>
+</div>
+{% endblock %}

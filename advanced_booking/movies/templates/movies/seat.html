@@ -9,7 +9,18 @@
         <div>
             <div class="row">
                 <div class="col-lg-12 align-self-center">
+                    {% for message in messages %}
+                    <div class="container-fluid p-0">
+                        <div class="alert {{ message.tags }} alert-dismissible" role="alert">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            {{ message }}
+                        </div>
+                    </div>
+                    {% endfor %}
                     <!-- this is the seat_form passed into html -->
+                    <a class="btn btn-primary" href="/cart" role="button">View Cart</a>
                     <form action="" method="post">
                         <div class="seatcontainer" style="width:1100px;overflow: hidden;">
                             {% csrf_token %}
@@ -21,25 +32,29 @@
                                 {% endfor %}
                             </ul><br>
                             {% for seats in seatlist %}
-                                {% if seats.status == 'X' %}
-                                    <div class="seat" style="display:inline;">
-                                        <button disabled class="seatbutton" type="submit" name="seats" value="{{ seats.id }}">
-                                            <img class="seatpic" src="{% static 'movies/' %}cinemaseatred.png">
-                                        </button>
-                                    </div>
-                                {% elif seats.status == '*' %}
-                                    <div class="seat" style="display:inline;">
-                                        <button disabled class="seatbutton" type="submit" name="seats" value="{{ seats.id }}">
-                                            <img class="seatpic" src="{% static 'movies/' %}cinemaseatgreen.png">
-                                        </button>
-                                    </div>
-                                {% elif seats.status == 'O' %}
-                                    <div class="seat" style="display:inline;">
-                                        <button class="seatbutton" type="submit" name="seats" value="{{ seats.id }}">
-                                            <img class="seatpic" src="{% static 'movies/' %}cinemaseatwhite.png">
-                                        </button>
-                                    </div>
+                            {% if seats.status == 'X' %}
+                            <div class="seat" style="display:inline;">
+                                <button disabled class="seatbutton" type="submit" name="seats" value="{{ seats.id }}">
+                                    <img class="seatpic" src="{% static 'movies/' %}cinemaseatred.png">
+                                </button>
+                            </div>
+                            {% elif seats.status == '*' %}
+                            <div class="seat" style="display:inline;">
+                                {% for t in tickets %}
+                                {% if t.seat.id == seats.id %}
+                                <a href="/remove_ticket/{{ showtime_id}}/ticket{{ t.id }}">
+                                    <img class="seatpic" src="{% static 'movies/' %}cinemaseatgreen.png">
+                                </a>
                                 {% endif %}
+                                {% endfor %}
+                            </div>
+                            {% elif seats.status == 'O' %}
+                            <div class="seat" style="display:inline;">
+                                <button class="seatbutton" type="submit" name="seats" value="{{ seats.id }}">
+                                    <img class="seatpic" src="{% static 'movies/' %}cinemaseatwhite.png">
+                                </button>
+                            </div>
+                            {% endif %}
                             {% endfor %}
 
                         </div>
@@ -50,7 +65,7 @@
     </div>
 </div>
 <style>
-  
+
 </style>
 
 </html>
