@@ -77,6 +77,15 @@ html, body, header, #intro{
     border-radius: 5px;
   }
   
+
+  .dropdown_option {
+    color: black;
+
+  }
+  .button{
+    color: black;
+
+  }
   
   
   /* Button position for Homepaage */

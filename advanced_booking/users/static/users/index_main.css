@@ -27,14 +27,38 @@
   /* background */
   body {
     background-color: #03071E;
+    height: 100%;
+
     
   }
   
   /* text */
   * {
     font-family: 'Raleway', sans-serif;
+    /* color:#DBE9EE; */
+    color: black;
+  }
+
+  .movieName{
     color:#DBE9EE;
-    
+  }
+
+  .navbarLight{
+    color:white;
+  }
+ .ml-3{
+   color: white;
+ }
+
+
+  .bgimg{
+    /* Full height */
+      height: 100%;
+
+      /* Center and scale the image nicely */
+      background-position: center;
+      /* background-repeat: no-repeat; */
+      background-size: cover;
   }
 
   .card{
@@ -42,7 +66,14 @@
       box-shadow: 0px 0px 10px 0px black;
   }
 
+  .dropdown_option {
+    color: black;
 
+  }
+  .button{
+    color: black;
+
+  }
 
   
   h1 {

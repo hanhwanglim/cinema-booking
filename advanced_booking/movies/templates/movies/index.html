@@ -17,7 +17,7 @@
                 <img width="100%" class="box" src="{% static 'movies/' %}{{ movie.id }}.jpg">
             </li>
 
-            <p class="topmoviename"><b>{{ movie }}</b></p>
+            <p class="topmoviename"><b class = movieName>{{ movie }}</b></p>
         </a>
     </div>
     {% endfor %}
@@ -36,7 +36,7 @@
                 <div class="postercontainer">
                     <img width="auto" height="100%" class="poster" src="{% static 'movies/' %}{{ movie.id }}.jpg">
                 </div>
-                <p class="moviename"><b>{{ movie }}</b></p>
+                <p class="moviename"><b class = "movieName">{{ movie }}</b></p>
             </a>
         </div>
         {% endfor %} {% else %}

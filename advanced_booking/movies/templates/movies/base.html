@@ -34,7 +34,7 @@
     <title>CINEMA NAME</title>
 </head>
 
-<body style="background-image: url('{% static 'movies/' %}bg.png ');">
+<body style="background-image: url('{% static 'movies/' %}bg.png ');" class = bgimg>
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
         integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
         crossorigin="anonymous"></script>
@@ -67,26 +67,26 @@
                 </a>
             </div>
             <form action="{% url 'search_results' %}" method="get">
-                <label for="sort">Sort:</label>
-                <select id="sort" name="sort">
-                    <option value="A-Z">A-Z</option>
-                    <option value="Z-A">Z-A</option>
-                    <option value="year(1-9)">Oldest</option>
-                    <option value="year(9-1)">Newest</option>
-                    <option value="duration(1-9)">Shortest</option>
-                    <option value="duration(9-1)">Longest</option>
-                    <option value="rating(1-9)">Rating(1-9)</option>
-                    <option value="rating(9-1)">Rating(9-1)</option>
+                <label for="sort"class = "navbarLight">Sort:</label>
+                <select id="sort" name="sort" class="dropdown_option">
+                    <option value="A-Z" class="dropdown_option">A-Z</option>
+                    <option value="Z-A" class="dropdown_option">Z-A</option>
+                    <option value="year(1-9)" class="dropdown_option">Oldest</option>
+                    <option value="year(9-1)" class="dropdown_option">Newest</option>
+                    <option value="duration(1-9)" class="dropdown_option">Shortest</option>
+                    <option value="duration(9-1)" class="dropdown_option">Longest</option>
+                    <option value="rating(1-9)" class="dropdown_option">Rating(1-9)</option>
+                    <option value="rating(9-1)" class="dropdown_option">Rating(9-1)</option>
                 </select>
-                <label for="query">Search for:</label>
+                <label for="query" class = "navbarLight">Search for:</label>
              <input name="query" type="text" placeholder="Search here.." >
-             <label for="search_for">by:</label>
-                <select id="search_for" name="search_for" >
-                    <option value="title">Title</option>
-                    <option value="director">Director</option>
-                    <option value="lead_actor">Lead Actor</option>
+             <label for="search_for"class = "navbarLight">by:</label>
+                <select id="search_for" name="search_for" class="dropdown_option">
+                    <option value="title" class="dropdown_option">Title</option>
+                    <option value="director" class="dropdown_option">Director</option>
+                    <option value="lead_actor" class="dropdown_option">Lead Actor</option>
                 </select>
-             <button type="submit" name="button">Submit</button>
+             <button type="submit" name="button" class="button">Submit</button>
             </form>
             <button class="navbar-toggler navbar-toggler-right border-0" type="button" data-toggle="collapse"
                 data-target="#navbar4">

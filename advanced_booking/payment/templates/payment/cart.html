@@ -23,10 +23,10 @@
     <div class="card border-0 my-5"> <!-- display card formatting-->
       <div class="card-body p-15">
             <h1>Basket</h1>
-        <form action="" method="post">
+        <form action="" method="post" >
                     {% csrf_token %}
                     {{ form }}
-                    <input type="submit" value="Submit">
+                    <input type="submit" value="Submit" class="button">
                 </form>
             {% for ticket in tickets.all %}
             <h5>

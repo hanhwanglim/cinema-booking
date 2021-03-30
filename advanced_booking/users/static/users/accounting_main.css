@@ -32,6 +32,8 @@
     
   }
   
+
+
   /*images*/
   img{
     border-radius: 5px;
@@ -50,7 +52,7 @@
   /* text */
   * {
     font-family: 'Raleway', sans-serif;
-    color:#DBE9EE;
+    color:black;
     
   }
 
