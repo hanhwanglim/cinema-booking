@@ -1,10 +1,7 @@
 import secrets
-import datetime
-from django.contrib.auth.base_user import AbstractBaseUser
 
 from django.db import models
-from django.utils import timezone
-from django.contrib.auth.models import AbstractUser, BaseUserManager
+from django.contrib.auth.models import AbstractBaseUser, AbstractUser, BaseUserManager
 
 
 class UserAccountManager(BaseUserManager):
