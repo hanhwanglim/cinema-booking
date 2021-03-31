@@ -246,9 +246,9 @@ def checkout(request):
 def pay_by_cash(request):
     form=PayByCashForm()
     context ={
-        "action"=""
-        'buttonText':'Pay'
-        'form':form
+        "action":"",
+        'buttonText':'Pay',
+        'form':form,
         'title':"Pay by cash"
     }
     if form.is_valid():
