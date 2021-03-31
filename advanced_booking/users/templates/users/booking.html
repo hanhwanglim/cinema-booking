@@ -1,9 +1,35 @@
 {% extends 'users/base.html' %}
-
+{% load static %}
 {% block content %}
 
 </br>
 </br>
+
+<script>
+function toggleVisibility(parent, ticketId)
+{
+
+    var things = document.getElementsByClassName("ticket-image");
+
+    for (var i = 0; i < things.length; ++i) {
+        var thing = things[i];
+       //console.log(thing);
+       //console.log(ticketId);
+        if (thing.id == ticketId) {
+            if (thing.style.display === "none") {
+                thing.style.display = "block";
+                parent.innerText = "Hide Ticket";
+            }
+            else {
+                thing.style.display = "none";
+                parent.innerText = "Show Ticket";
+            }
+            break;
+        }
+    }
+}
+</script>
+
 
 <div class="container">
     {% for message in messages %}
@@ -28,21 +54,27 @@
                 <li><div class="container">
                     <div class="card border-0 my-5"> <!-- display card formatting-->
                       <div class="card-body p-15">
+                          
+
                 <p>Time of order : {{ o.date_created }} </p>
 
                     <ul>
                         {% for ticket in o.tickets.all %}
                         <li>{{ ticket.showtime }}</li>
-
                         {% if ticket.type == "ADULT" %}
-                        For: Adult
+                        Adult
                      {% endif %}
                      {% if ticket.type == "CHILD" %}
-                     For: Child
+                      Child
                   {% endif %}
                   {% if ticket.type == "SENIOR" %}
-                  For: Senior
+                   Senior
                {% endif %}
+               &nbsp&nbsp&nbsp
+
+               <img id="{{ticket.id}}" style="display:none" width="20%" height="20%" class="poster ticket-image col"  src="{% static 'rendered_tickets/' %}ticket{{ ticket.id }}.png">
+               <a href="#" class="col" onclick="toggleVisibility(this, {{ticket.id}})">Show Ticket</a>
+               
 
                         {% endfor %}
                     </ul>
