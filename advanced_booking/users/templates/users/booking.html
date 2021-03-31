@@ -34,6 +34,16 @@
                         {% for ticket in o.tickets.all %}
                         <li>{{ ticket.showtime }}</li>
 
+                        {% if ticket.type == "ADULT" %}
+                        For: Adult
+                     {% endif %}
+                     {% if ticket.type == "CHILD" %}
+                     For: Child
+                  {% endif %}
+                  {% if ticket.type == "SENIOR" %}
+                  For: Senior
+               {% endif %}
+
                         {% endfor %}
                     </ul>
                     {% endfor %}
