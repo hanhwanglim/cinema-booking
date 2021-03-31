@@ -147,9 +147,10 @@ def seat(request, showtime_id):
             context['seatlist'] = view_tickets
             context['tickets'] = tickets
             context['showtime_id'] = showtime_id
-    action=request.GET['button']
-    if action== "Pay by cash":
-        context['action']="url 'pay_by_cash'"
+    #FIXME: for paying by cash
+    # action=request.GET['button']
+    # if action== "Pay by cash":
+    #     context['action']="url 'pay_by_cash'"
     return render(request, 'movies/seat.html', context)
 
 
