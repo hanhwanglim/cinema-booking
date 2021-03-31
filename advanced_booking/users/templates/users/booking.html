@@ -20,13 +20,20 @@
         <div class="col-lg-12 ">
             <h1 align="center">My Tickets:</h1>
             {% if user.is_authenticated %}
+            
+
+
             <ol>
-                {% for o in order %}
-                <li>
-                    {{ o }} - {{ o.date_created }}
+                {% for o in order reversed%}
+                <li><div class="container">
+                    <div class="card border-0 my-5"> <!-- display card formatting-->
+                      <div class="card-body p-15">
+                <p>Time of order : {{ o.date_created }} </p>
+
                     <ul>
                         {% for ticket in o.tickets.all %}
                         <li>{{ ticket.showtime }}</li>
+
                         {% endfor %}
                     </ul>
                     {% endfor %}
