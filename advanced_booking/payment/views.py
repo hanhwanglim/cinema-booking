@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.http import HttpResponse
 from django.core.mail import send_mail, EmailMessage
-from .forms import CardForm
+from .forms import CardForm,PayByCashForm
 from movies.models import Movie
 from halls.models import Showtime
 from .forms import QuickCheckoutForm
@@ -242,3 +242,14 @@ def checkout(request):
             'title': "Checkout"
         }
         return render(request, 'payment/payment.html', context)
+
+def pay_by_cash(request):
+    form=PayByCashForm()
+    context ={
+        "action"=""
+        'buttonText':'Pay'
+        'form':form
+        'title':"Pay by cash"
+    }
+    if form.is_valid():
+        messages.info(request, 'The payment has been accepted')
