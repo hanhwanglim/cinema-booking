@@ -39,7 +39,10 @@ class Showtime(models.Model):
                 s.save()
 
     def __str__(self):
-        return f'{self.movie} - {self.hall} ({self.time})'
+        formatted_time = self.time.strftime("%d %B, %Y  %I:%M%p")
+        return f'{self.movie}  {formatted_time} ({self.hall})'
+        # FIXME: Can't align when the movie name contains brackets
+        # return f" {str(self.movie):-<40} {formatted_time:-<30} {str(self.hall)}"
 
 
 class Seat(models.Model):
