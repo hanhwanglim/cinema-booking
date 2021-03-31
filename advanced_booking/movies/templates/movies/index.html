@@ -34,7 +34,7 @@
         <div class="allfilms">
             <a href="{% url 'movie' movie.id %}">
                 <div class="postercontainer">
-                    <img width="auto" height="100%" class="poster" src="{% static 'movies/' %}{{ movie.id }}.jpg">
+                    <img  class="poster" src="{% static 'movies/' %}{{ movie.id }}.jpg">
                 </div>
                 <p class="moviename"><b class = "movieName">{{ movie }}</b></p>
             </a>

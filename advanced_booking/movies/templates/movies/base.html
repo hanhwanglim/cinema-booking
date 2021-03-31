@@ -34,7 +34,11 @@
     <title>CINEMA NAME</title>
 </head>
 
-<body style="background-image: url('{% static 'movies/' %}bg.png ');" class = bgimg>
+<body style="background-image: url('{% static 'movies/' %}bg.png ');
+            background-attachment: fixed;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;" class=bgimg>
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
         integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
         crossorigin="anonymous"></script>
@@ -49,6 +53,7 @@
         <div class="container">
             <div class="logocontainer">
                 <a class="navbar-brand d-flex align-items-center" href="/">
+                    <div class="websitelogo">
                     <svg width="20px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg"
                         xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 512 512"
                         style="enable-background:new 0 0 512 512;" xml:space="preserve">
@@ -62,48 +67,52 @@
                             </g>
                         </g>
                     </svg>
+                    </div>
 
                     <span class="ml-3 font-weight-bold ">Movies</span>
                 </a>
             </div>
-            <form action="{% url 'search_results' %}" method="get">
-                <label for="sort"class = "navbarLight">Sort:</label>
-                <select id="sort" name="sort" class="dropdown_option">
-                    <option value="A-Z" class="dropdown_option">A-Z</option>
-                    <option value="Z-A" class="dropdown_option">Z-A</option>
-                    <option value="year(1-9)" class="dropdown_option">Oldest</option>
-                    <option value="year(9-1)" class="dropdown_option">Newest</option>
-                    <option value="duration(1-9)" class="dropdown_option">Shortest</option>
-                    <option value="duration(9-1)" class="dropdown_option">Longest</option>
-                    <option value="rating(1-9)" class="dropdown_option">Rating(1-9)</option>
-                    <option value="rating(9-1)" class="dropdown_option">Rating(9-1)</option>
-                </select>
-                <label for="query" class = "navbarLight">Search for:</label>
-             <input name="query" type="text" placeholder="Search here.." >
-             <label for="search_for"class = "navbarLight">by:</label>
-                <select id="search_for" name="search_for" class="dropdown_option">
-                    <option value="title" class="dropdown_option">Title</option>
-                    <option value="director" class="dropdown_option">Director</option>
-                    <option value="lead_actor" class="dropdown_option">Lead Actor</option>
-                </select>
-             <button type="submit" name="button" class="button">Submit</button>
-            </form>
+            <div class="searchbarcontainer">
+                <form action="{% url 'search_results' %}" method="get">
+                    <select id="sort" name="sort" class="dropdown_option" style="display: none;">
+                        <option value="A-Z" class="dropdown_option">A-Z</option>
+                        <option value="Z-A" class="dropdown_option">Z-A</option>
+                        <option value="year(1-9)" class="dropdown_option">Oldest</option>
+                        <option value="year(9-1)" class="dropdown_option">Newest</option>
+                        <option value="duration(1-9)" class="dropdown_option">Shortest</option>
+                        <option value="duration(9-1)" class="dropdown_option">Longest</option>
+                        <option value="rating(1-9)" class="dropdown_option">Rating(1-9)</option>
+                        <option value="rating(9-1)" class="dropdown_option">Rating(9-1)</option>
+                    </select>
+                    <img class="mglass" src="{% static 'movies/' %}mglass.png">
+                    <input class="searchbar" name="query" type="text" placeholder="Search here..">
+                    <select id="search_for" name="search_for" class="dropdown_option" style="display: none;">
+                        <option value="title" class="dropdown_option">Title</option>
+                        <option value="director" class="dropdown_option">Director</option>
+                        <option value="lead_actor" class="dropdown_option">Lead Actor</option>
+                    </select>
+                    <button type="submit" name="button" class="button" style="display: none;">Submit</button>
+                </form>
+            </div>
             <button class="navbar-toggler navbar-toggler-right border-0" type="button" data-toggle="collapse"
                 data-target="#navbar4">
                 <span class="navbar-toggler-icon"></span>
             </button>
 
-
+                
             <div class="collapse navbar-collapse" id="navbar4">
                 <ul class="navbar-nav mr-auto pl-lg-4">
+                    <li class="nav-item px-lg-2 active">
+
+                    </li>
                     <!-- Probobaly should come up with a slightly more elegenat soultion but this works to space them for now -->
                     <li class="nav-item px-lg-2 active">
-                        <a class="nav-link" href="#"> <span class="d-inline-block d-lg-none icon-width"></span><i
-                                class="fas fa-home"></i></span> Account</a>
+                        <a class="nav-link" href="/booking"> <span class="d-inline-block d-lg-none icon-width"></span><i
+                                class="fas fa-home"></i></span>My Orders</a>
                     </li>
-                    <li class="nav-item px-lg-2"> <a class="nav-link" href="#"><span
+                    <li class="nav-item px-lg-2"> <a class="nav-link" href="/cart"><span
                                 class="d-inline-block d-lg-none icon-width"><i
-                                    class="fas fa-spa"></i></span>Services</a> </li>
+                                    class="fas fa-spa"></i></span>View Cart</a> </li>
 
                     {% if user.is_authenticated == 0 %}
                     <li class="nav-item px-lg-2"> <a class="nav-link" href="/register"><span
