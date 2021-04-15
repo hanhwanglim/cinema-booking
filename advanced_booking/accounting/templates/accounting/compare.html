@@ -15,7 +15,7 @@
     function drawDualY() {
 
       var data = google.visualization.arrayToDataTable([
-          ['Year', {% for m in movie %}'{{ m }}', {% endfor %}],
+          ['Date', {% for m in movie %}'{{ m }}', {% endfor %}],
           {% for d in data %}[{% for element in d%}{{ element }},{% endfor %}],
           {% endfor %}
         ]);
