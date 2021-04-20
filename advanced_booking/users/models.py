@@ -1,11 +1,14 @@
 import secrets
 
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser, AbstractUser, BaseUserManager
+from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, PermissionsMixin
 
 
 class UserAccountManager(BaseUserManager):
     def create_user(self, email, username, password=None):
+        """
+        Creates and saves a user with the given email and password
+        """
         if not email:
             raise ValueError('Users must have an email address')
         if not username:
@@ -21,6 +24,9 @@ class UserAccountManager(BaseUserManager):
         return user
 
     def create_superuser(self, email, username, password=None):
+        """
+        Creates and saves a superuser with the given email and password
+        """
         user = self.create_user(
             email=self.normalize_email(email),
             password=password,
@@ -33,14 +39,13 @@ class UserAccountManager(BaseUserManager):
         return user
 
 
-class User(AbstractUser, AbstractBaseUser):
+class User(AbstractBaseUser, PermissionsMixin):
     ########################## DO NOT CHANGE ##########################
     # Django default user fields
     email        = models.EmailField(verbose_name="email", max_length=60, unique=True)
     username     = models.CharField(max_length=30, unique=True)
-    password     = models.CharField(max_length=100, null=True)
     date_joined  = models.DateTimeField(
-        verbose_name='date joined', 
+        verbose_name='date joined',
         auto_now_add=True,
     )
     last_login   = models.DateTimeField(verbose_name='last login', auto_now=True)
@@ -52,9 +57,9 @@ class User(AbstractUser, AbstractBaseUser):
     ###################################################################
 
     # Extended fields
-    birthday     = models.DateField(null=True)
-    verified     = models.BooleanField(default=False)
-    auth_token   = models.CharField(max_length=256, null=True)
+    birthday    = models.DateField(null=True)
+    verified    = models.BooleanField(default=False)
+    auth_token  = models.CharField(max_length=256, null=True)
 
     # TODO: add more fields in the future
 
