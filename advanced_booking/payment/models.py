@@ -54,7 +54,7 @@ class Ticket(models.Model):
 
 
 class ShoppingCart(models.Model):
-    user = models.ForeignKey(User, on_delete=models.RESTRICT)
+    user = models.ForeignKey(User, on_delete=models.RESTRICT, null=True)
     ticket = models.ManyToManyField(Ticket)
 
     def __str__(self):
