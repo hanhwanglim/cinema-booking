@@ -84,4 +84,4 @@ class QuickCheckoutForm(forms.Form):
                 choices=tuple([(c, c) for c in cards]))
 
 class PayByCashForm(forms.Form):
-    amount_payed=forms.IntegerField()
+    amount_payed=forms.FloatField()

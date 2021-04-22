@@ -99,6 +99,10 @@ def seat(request, showtime_id):
                     
                     # return redirect(add_to_cart, seat_id=name, showtime_id=showtime_id,
                     #                 ticket_type=ticket_type)
+                    if  'pay_by_cash_button' in request.POST:
+                        return redirect('pay_by_cash')
+                    if 'pay_online' in request.POST:
+                        return redirect('cart')
                     return redirect('seat', showtime_id=showtime_id)
                 else:
                     print("Error: form not valid!")
