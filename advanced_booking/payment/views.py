@@ -216,6 +216,58 @@ def sendticket(order):
         print("Error: Failed to send email: CAN NOT attach files")
         return False
 
+def book_ticket_staff(user,amount_payed):
+    """
+    Creates a booking payment by cash for an employee. It marks the seat
+    as reserved and removes the shopping cart object.
+
+    Return price if booked successful.
+    If user is not authorised(not staff or above) return -1
+    If booking of a seat fails return -2
+    If amount payed is less than total amount return -3
+    """
+    if user.is_staff or user.is_admin or user.is_superuser:
+        cart = ShoppingCart.objects.get(user=user)
+        tickets = cart.ticket.all()
+
+        
+        flag = 0  # initial flag
+        for ticket in tickets:
+            if ticket.seat.status == 'X':  # if any ticket has been already booked
+                cart.ticket.remove(ticket)
+                flag = 1  # any removed ticket failed flag it
+
+        if flag:
+            return -2
+        amount = sum(ticket.price for ticket in tickets)
+        if amount_payed < amount:
+            return -3
+        order = Order.objects.create(
+            user=user,
+            order_status='Succeed',
+            amount=amount
+        )
+
+        for ticket in tickets:
+            order.tickets.add(ticket)
+            ticket.seat.status = 'X'  # Marking seat as booked
+            ticket.seat.save()
+            ticket.save()
+            generate_ticket(ticket_info(ticket, user.get_full_name())) # generate tickets
+
+        cart.delete()
+        sendticket(order)
+        change = amount_payed - amount
+        return change
+    else:
+        return -1
+
+def get_basket_price(user):
+    #returns the total price of the basket
+    cart = ShoppingCart.objects.get(user=user)
+    tickets = cart.ticket.all()
+    return sum(ticket.price for ticket in tickets)
+
 
 def checkout(request):
     """
@@ -243,13 +295,52 @@ def checkout(request):
         }
         return render(request, 'payment/payment.html', context)
 
+
+
+
 def pay_by_cash(request):
-    form=PayByCashForm()
-    context ={
-        "action":"",
-        'buttonText':'Pay',
-        'form':form,
-        'title':"Pay by cash"
-    }
-    if form.is_valid():
-        messages.info(request, 'The payment has been accepted')
+    user=request.user
+    messages.get_messages(request)
+    if user.is_staff or user.is_admin or user.is_superuser:
+        total_price = get_basket_price(user=user)
+        if request.method == 'POST':
+            form=PayByCashForm(request.POST)
+            context ={
+                'action':'',
+                'amount' :total_price,
+                'title':"Pay by cash",
+                'buttonText':'Confirm Payment',
+                'form':form
+            }
+            return render(request,'payment/pay_by_cash.html', context)
+        else:
+            form=PayByCashForm(request.GET)
+            context ={
+                'action':'',
+                'amount' :total_price,
+                'title':"Pay by cash",
+                'buttonText':'Confirm Payment',
+                'form':form
+            }
+            if form.is_valid():
+                change = book_ticket_staff(user=user,amount_payed=form.cleaned_data['amount_payed'])
+                if change > 0:
+                    messages.info(request, 'The payment has been accepted')
+                    messages.info(request, 'The change is' + change)
+                    return redirect('index')
+                elif change == 0:
+                    messages.info(request, 'The payment has been accepted')
+                    return redirect('index')
+                elif change == -3:
+                    messages.error(request, 'The amount payed is less than the total ticket price!')
+                elif change == -2:
+                    messages.error(request, 'Booking a seat has failed.Check if all requested seats are free!')
+                    return redirect('cart')
+                elif change == -1:
+                    messages.error(request, 'The user is not authorised!')
+                    return redirect('index')
+            return render(request,'payment/pay_by_cash.html', context)
+    else:
+        messages.error(request, 'The user is not authorised!')
+        return redirect('index')
+        

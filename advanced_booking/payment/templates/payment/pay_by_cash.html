@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>{{ title }}</title>
+</head>
+<body>
+	{% if messages %}
+	<ul>
+	   {% for message in messages %}
+		   <li>{{ message }}</li>
+	   {% endfor %}
+	</ul>
+	{% endif %}
+	<p> Amount to be payed: {{amount}} </p>
+	<form action="{{ action }}" method="POST/GET">
+    {% csrf_token %}
+    {{ form }}
+    <input type="submit" name="pay_by_cash_button" value="{{ buttonText }}">  </input>
+	</form>
+
+</body>
+</html>
