@@ -1,0 +1,58 @@
+{% extends 'movies/base.html' %} {% block content %} {% load static %}
+{% if messages %}
+<ul class="messages">
+	{% for message in messages %}
+	<li{% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+		{% endfor %}
+</ul>
+{% endif %}
+<h1>Search Results for '{{search}}':</h1>
+<h4>Advanced Search</h4>
+
+<form action="{% url 'search_results' %}" method="get">
+	<label for="sort">Sort:</label>
+	<div class="searchform" style="display: inline;">
+	<select id="sort" name="sort">
+		<option value="A-Z">A-Z</option>
+		<option value="Z-A">Z-A</option>
+		<option value="year(1-9)">Oldest</option>
+		<option value="year(9-1)">Newest</option>
+		<option value="duration(1-9)">Shortest</option>
+		<option value="duration(9-1)">Longest</option>
+		<option value="rating(1-9)">Rating(1-9)</option>
+		<option value="rating(9-1)">Rating(9-1)</option>
+	</select>
+	</div>
+	<label for="query">Search for:</label>
+	<div class="searchform" style="display: inline;">
+	<input name="query" type="text" placeholder="Search here..">
+</div>
+	<label for="search_for">by:</label>
+	<div class="searchform" style="display: inline;">
+		<select id="search_for" name="search_for">
+			<option value="title">Title</option>
+			<option value="director">Director</option>
+			<option value="lead_actor">Lead Actor</option>
+		</select>
+	</div>
+	<button type="submit" name="button">Submit</button>
+</form>
+<div class="allfilmscontainer">
+	<div class="row"></div>
+	<div class="col-lg-12">
+		{% if movies %} {% for movie in movies %}
+		<div class="allfilms">
+			<a href="{% url 'movie' movie.id %}">
+				<div class="postercontainer">
+					<img width="auto" height="100%" class="poster" src="{% static 'movies/' %}{{ movie.id }}.jpg">
+				</div>
+				<p class="moviename"><b>{{ movie }}</b></p>
+			</a>
+		</div>
+		{% endfor %} {% else %}
+		<p>No movies are available.</p>
+		{% endif %}
+		<br>
+	</div>
+</div>
+{% endblock %}

@@ -1,11 +1,16 @@
 {% extends 'movies/base.html' %} {% block content %} {% load static %}
-<p>This is movie info page </p>
 
 
 
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
 
-
-
+<div class="bg">
 <!--
 <button type="button" class="btn btn-outline-success">{{ movie.title }}</button>
 <button type="button" class="btn btn-outline-danger">Danger</button>
@@ -31,23 +36,29 @@
                     <hr class="rounded">
 
                     <h5>Director:</h5>
-                    {{ movie.director }}
+                    <p>{{ movie.director }}</p>
                     <h5>Lead Actors:</h5>
-                    {{ movie.lead_actor }}
+                    <p>{{ movie.lead_actor }}</p>
                     <h5>Duration:</h5>
-                    {{ movie.duration }} minutes
+                    <p> {{ movie.duration }} minutes</p>
                     <h5>Premier Date:</h5>
-                    {{ movie.premier_date }} {% else %}
+                    <p>{{ movie.premier_date }}</p> {% else %}
                     <p>No movies found.</p>
                     {% endif %}
                 </div>
                 <div class="col-lg-12">
                     <!-- this is the datetime_form passed into html -->
-                    <form action="" method="post">
+                    <span style="color:black">
+                    <form action="" method="post"  >
                         <h1>Dates & Times</h1>
+                        <div class = "movietimes">
+                            <div class="Quickcheckout">
                         {% csrf_token %} {{ form }}
-                        <input type="submit" value="Submit">
+                            </div>
+                        </div>
+                        <input type="submit" value="Submit" class="button">
                     </form>
+                    </span>
                 </div>
             </div>
         </div>
@@ -55,9 +66,8 @@
 
     </div>
 </div>
+</div>
 
 
-
- 
 </html>
 {% endblock %}

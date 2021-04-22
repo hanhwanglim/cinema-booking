@@ -1,15 +1,3 @@
-
-html, body, header, #intro{
-  height: 100%
-}
-#intro{
-  background: url("https://imgur.com/a/oOsDmED")no-repeat center center fixed;
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
-  background-size: cover;}
-
-
 /*Row and Column styles */
 
 .col-lg-12{ /*large box*/
@@ -21,8 +9,10 @@ html, body, header, #intro{
     box-shadow: 0px 0px 10px 0px black;
   }
   .col-lg-6{ /*large box*/
-    padding: 10px;
-    margin: 0px;
+    padding: 50px;
+    margin: 20px;
+    background-color: #1E2D82;
+    box-shadow: 0px 0px 10px 0px black;
     
   }
   
@@ -77,15 +67,6 @@ html, body, header, #intro{
     border-radius: 5px;
   }
   
-
-  .dropdown_option {
-    color: black;
-
-  }
-  .button{
-    color: black;
-
-  }
   
   
   /* Button position for Homepaage */

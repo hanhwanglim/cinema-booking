@@ -13,14 +13,33 @@
     google.charts.setOnLoadCallback(drawDualY);
 
     function drawDualY() {
+
       var data = google.visualization.arrayToDataTable([
-        ['Date', 'Revenue'],
-        {% for d in data %}[{% for element in d %}{{ element }}, {% endfor %}],
-        {% endfor %}
-      ]);
+          ['Date', {% for m in movie %}'{{ m }}', {% endfor %}],
+          {% for d in data %}[{% for element in d%}{{ element }},{% endfor %}],
+          {% endfor %}
+        ]);
+
+      var options = {
+        chart: {
+          title: 'Revenue from {{ start_date }} to {{ end_date }}',
+          width: 1200,
+          height: 800
+        },
+        vAxis: {
+            minValue: 0
+          },
+          
+        hAxis: {
+            viewWindow: {
+                min: {{ format_start_date }},
+                max: {{ format_end_date }}
+            }
+        },
+      };
 
       var materialChart = new google.charts.Bar(document.getElementById('chart_div'));
-      materialChart.draw(data);
+      materialChart.draw(data, google.charts.Bar.convertOptions(options));
     }
   </script>
 </head>
@@ -29,21 +48,16 @@
   <div class = "row">
     <div class = "col-lg-12">
       <h1>Revenue from {{ start_date }} to {{ end_date }}</h1>
-      <form action="/accounting" method="POST">
+      <form action="/accounting/compare" method="POST">
         {% csrf_token %}
         <input type="date" required name="start_date"></input>
         <input type="date" required name="end_date"></input>
         <input type="submit" value="Submit">
       </form>
-
-      </br>
       <!--Div that will hold the pie chart-->
       <div id="chart_div"></div>
+      
     </div>
-    
-    <h1>Overall income ${{ overall_income }}</h1>
-
   </div>
-</div>
 
 {% endblock %}

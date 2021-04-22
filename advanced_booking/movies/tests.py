@@ -95,7 +95,8 @@ class MovieViewTests(TestCase):
         response = self.client.get(reverse('seat', args=[show.id]))
 
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, f'seat')
+        self.assertContains(response, 'seat')
+        self.assertContains(response, 'type')
 
         # TODO: write a test that can check if the route is correct
 

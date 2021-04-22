@@ -9,6 +9,7 @@ from .models import CardDetail
 class CardForm(ModelForm):
     """Simple card form to create new card"""
     save_card = forms.BooleanField(required=False)
+
     # TODO add validations
 
     def save(self, commit=True):
@@ -51,10 +52,11 @@ class SelectSeatForm(forms.Form):
     def __init__(self, *args, **kwargs):
         showtime_id = kwargs.pop('showtime_id', None)
         super(SelectSeatForm, self).__init__(*args, **kwargs)
+        self.initial['ticket_type'] = "ADULT"
 
         # use showtime to grab all available seats
         if showtime_id:
-            available_seats = Seat.objects.all().filter(showtime_id=showtime_id)
+            available_seats = Seat.objects.filter(showtime_id=showtime_id).filter(status="O")
             self.fields['selected_seats'] = forms.ChoiceField(
                 choices=tuple([(a_seat.id, a_seat) for a_seat in available_seats]))
 
@@ -65,4 +67,21 @@ class SelectSeatForm(forms.Form):
         ("SENIOR", "Senior(Over 65)"),
     )
 
-    ticket_type = forms.ChoiceField(choices=AGE_CHOICES)
+    ticket_type = forms.ChoiceField(choices=AGE_CHOICES, widget=forms.RadioSelect())
+
+
+class QuickCheckoutForm(forms.Form):
+    """
+    list all payment for user
+    """
+
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
+        super(QuickCheckoutForm, self).__init__(*args, **kwargs)
+        if user:
+            cards = CardDetail.objects.filter(user=user).all()
+            self.fields['card'] = forms.ChoiceField(
+                choices=tuple([(c, c) for c in cards]))
+
+class PayByCashForm(forms.Form):
+    amount_payed=forms.IntegerField()
