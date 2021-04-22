@@ -144,8 +144,8 @@ def cart(request):
         return render(request, 'payment/cart.html', context)
         # add ticket to context
     else:
-        messages.error("Need login!")
-        return redirect('index')
+        # messages.error("Need login!")
+        return redirect('login')
 
 
 def book_ticket(user, card):
@@ -182,7 +182,7 @@ def book_ticket(user, card):
         ticket.seat.save()
         ticket.save()
         # generate tickets
-        generate_ticket(ticket_info(ticket, user.get_full_name()))
+        generate_ticket(ticket_info(ticket, user.username()))
 
     cart.delete()
     sendticket(order)
