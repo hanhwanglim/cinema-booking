@@ -14,13 +14,34 @@
 
     function drawDualY() {
       var data = google.visualization.arrayToDataTable([
-        ['Date', 'Revenue'],
+        ['Date', 'Revenue', ],
         {% for d in data %}[{% for element in d %}{{ element }}, {% endfor %}],
         {% endfor %}
       ]);
 
-      var materialChart = new google.charts.Bar(document.getElementById('chart_div'));
-      materialChart.draw(data);
+      var options = {
+        chart: {
+          title: 'Revenue from {{ start_date }} to {{ end_date }}',
+          width: 1200,
+          height: 800
+        },
+        vAxis: {
+          minValue: 0
+        },
+          
+        hAxis: {
+            viewWindow: {
+                min: {{ format_start_date }},
+                max: {{ format_end_date }}
+            }
+        },
+      };
+
+      var chart = new google.visualization.ColumnChart(
+        document.getElementById('chart_div'));
+
+      chart.draw(data, options);
+    
     }
   </script>
 </head>
