@@ -66,6 +66,8 @@ def accounting(request):
         context = {
             'start_date': start_date.strftime("%d-%m-%Y"),
             'end_date': end_date.strftime("%d-%m-%Y"),
+            'format_start_date': f'new Date({start_date.year},{start_date.month -1},{start_date.day - 1})',
+            'format_end_date': f'new Date({end_date.year},{end_date.month -1},{end_date.day + 1})',
             'data': data,
             'len': range(len(data)),
             'overall_income': overall_income,
@@ -79,6 +81,8 @@ def accounting(request):
     context = {
         'start_date': last_week.strftime("%d-%m-%Y"),
         'end_date': today.strftime("%d-%m-%Y"),
+        'format_start_date': f'new Date({last_week.year},{last_week.month -1},{last_week.day - 1})',
+        'format_end_date': f'new Date({today.year},{today.month -1},{today.day + 1})',
         'data': data,
         'len': range(len(data)),
         'overall_income': overall_income,
