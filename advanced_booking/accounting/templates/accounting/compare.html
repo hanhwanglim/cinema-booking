@@ -38,8 +38,10 @@
         },
       };
 
-      var materialChart = new google.charts.Bar(document.getElementById('chart_div'));
-      materialChart.draw(data, google.charts.Bar.convertOptions(options));
+      var chart = new google.visualization.ColumnChart(
+        document.getElementById('chart_div'));
+
+      chart.draw(data, options);
     }
   </script>
 </head>
