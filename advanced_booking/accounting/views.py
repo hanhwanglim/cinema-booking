@@ -1,5 +1,5 @@
 from halls.models import Showtime
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from datetime import date, timedelta, datetime
 from django.utils import timezone
 from movies.models import Movie
@@ -47,6 +47,12 @@ def accounting(request):
     """
     Queries the database for the week's income.
     """
+    try:
+        if not request.user.is_admin:
+            return redirect('index')
+    except:
+        return redirect('index')
+
     all_orders = Order.objects.all()
     overall_income = 0
     for o in all_orders:
@@ -82,6 +88,12 @@ def accounting(request):
 
 
 def movie_income(request, movie_id):
+    try:
+        if not request.user.is_admin:
+            return redirect('index')
+    except:
+        return redirect('index')
+
     movie = Movie.objects.get(pk=movie_id)
     movie_showtime = Showtime.objects.filter(movie=movie)
     tickets = []
@@ -143,6 +155,12 @@ def create_comparison(start_date, end_date):
 
 
 def compare(request):
+    try:
+        if not request.user.is_admin:
+            return redirect('index')
+    except:
+        return redirect('index')
+
     if request.method == 'POST':
         start_date = datetime.strptime(request.POST['start_date'], '%Y-%m-%d')
         end_date = datetime.strptime(request.POST['end_date'], '%Y-%m-%d')
