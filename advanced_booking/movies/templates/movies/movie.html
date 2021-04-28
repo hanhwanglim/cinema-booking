@@ -1,5 +1,5 @@
 {% extends 'movies/base.html' %} {% block content %} {% load static %}
-<p>This is movie info page </p>
+
 
 
 {% if messages %}
@@ -51,7 +51,11 @@
                     <span style="color:black">
                     <form action="" method="post"  >
                         <h1>Dates & Times</h1>
+                        <div class = "movietimes">
+                            <div class="Quickcheckout">
                         {% csrf_token %} {{ form }}
+                            </div>
+                        </div>
                         <input type="submit" value="Submit" class="button">
                     </form>
                     </span>
