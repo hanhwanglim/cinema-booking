@@ -294,14 +294,20 @@ def checkout(request):
             return redirect('checkout')
 
     else:
-        form = CardForm()
-        context = {
-            'form': form,
-            'buttonText': "Pay",
-            'action': "",
-            'title': "Checkout"
-        }
-        return render(request, 'payment/payment.html', context)
+        # check if the user is verified by email (mailtrap)
+        if request.user.verified():
+            form = CardForm()
+            context = {
+                'form': form,
+                'buttonText': "Pay",
+                'action': "",
+                'title': "Checkout"
+            }
+            return render(request, 'payment/payment.html', context)
+        else:
+            messages.error(
+                request, 'Please verify your account by clicking the link in the email.')
+            return redirect('cart')
 
 
 def pay_by_cash(request):
