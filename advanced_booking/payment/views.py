@@ -277,9 +277,15 @@ def checkout(request):
     """
     if request.method == 'POST':
         form = CardForm(request.POST)
+
         if form.is_valid():
             print("valid form")
             card = form.save()
+            try:
+                card.user.add(request.user)
+            except:
+                pass
+            print(card)
             if not book_ticket(request.user, card):
                 messages.error(
                     request, 'Some tickets are unavailable. Please try again.')
