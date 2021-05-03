@@ -40,19 +40,19 @@ def generate_ticket(ticket_info):
                  "; Time" + ticket_info["time"] + "; Row :" + ticket_info["seat_row"] + \
                  "; Seat Number: " + ticket_info["seat_number"] + "; Booking Under: " + ticket_info["user_fullname"]
 
-    qr_image_size = 10
+    qr_image_size = 8
     qr = qrcode.QRCode(
         # error_correction=qrcode.constants.ERROR_CORRECT_H,
         version=1,
         box_size=qr_image_size,
-        border=2)
+        border=0.5)
     qr.add_data(input_data)
     qr.make(fit=True)
     qr_img = qr.make_image(fill='black', back_color='white').convert('RGBA')
 
     # qr_img + ticket_tmp   => ticketImage
     ticketImage = ticket_tmp.copy()
-    ticketImage.paste(qr_img, (720, 250))
+    ticketImage.paste(qr_img, (750, 250))
 
     # for debugging
     # ticketImage.show()
@@ -100,4 +100,4 @@ def ticket_info(ticket, user_fullname):
 
 # if __name__ == "__main__":
 #     # movie_title,rating,movie_date,screen, type,seat, movie_id
-#     generate_ticket("TEST MOVIE TITLE", "R18", str(datetime.now()), "hall 2", "ADULT", "A1", 1)
+#     generate_ticket("Joker", "R18", str(datetime.now()), "hall 2", "ADULT", "A1", 12)

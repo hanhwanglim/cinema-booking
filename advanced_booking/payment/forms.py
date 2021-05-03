@@ -10,14 +10,12 @@ class CardForm(ModelForm):
     """Simple card form to create new card"""
     save_card = forms.BooleanField(required=False)
 
-    # TODO add validations
-
     def save(self, commit=True):
         """
-        Overriding the default save method. If user allows the 
-        card to be stored in the database then only save it.
+        Overriding the default save method. If user allows the
+        card to be stored in the database only then save it.
         """
-        card = super().save(commit=False)
+        card = super(CardForm, self).save(commit=False)
         if commit and self.cleaned_data['save_card']:
             card.save()
         return card
@@ -25,7 +23,29 @@ class CardForm(ModelForm):
     class Meta:
         model = CardDetail
         fields = ['card_number', 'card_holder_name',
-                  'expire_month', 'expire_year', 'save_card']
+                  'expire_month', 'expire_year', 'save_card', ]
+
+    def clean_expire_month(self):
+        '''
+        Check if month is valid
+        '''
+        expire_month = self.cleaned_data['expire_month']
+        if not 1 <= int(expire_month) <= 12:  # between 1 and 12
+            # raise forms.ValidationError({"expire_month":" Please enter a valid month"})
+            raise forms.ValidationError("Please enter a valid month")
+
+        return expire_month
+
+    def clean_expire_year(self):
+        '''
+        Check if month is valid
+        '''
+        expire_year = self.cleaned_data['expire_year']
+        if not int(expire_year) >= 2021:  # check the expire year
+            # raise forms.ValidationError({"expire_month":" Please enter a valid month"})
+            raise forms.ValidationError("Please enter a valid year")
+
+        return expire_year
 
 
 class SelectDatetimeForm(forms.Form):
@@ -83,5 +103,6 @@ class QuickCheckoutForm(forms.Form):
             self.fields['card'] = forms.ChoiceField(
                 choices=tuple([(c, c) for c in cards]))
 
+
 class PayByCashForm(forms.Form):
-    amount_payed=forms.FloatField()
+    amount_payed = forms.FloatField()

@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.http import HttpResponse
 from django.core.mail import send_mail, EmailMessage
-from .forms import CardForm,PayByCashForm
+from .forms import CardForm, PayByCashForm
 from movies.models import Movie
 from halls.models import Showtime
 from .forms import QuickCheckoutForm
@@ -71,6 +71,7 @@ def add_to_cart(request, seat_id, showtime_id, ticket_type):
         print("Error: Unauthenticated user!")
         # return redirect('index')
         return False
+
 
 ##cart view ###
 def remove_from_cart(request, ticket_id):
@@ -182,7 +183,7 @@ def book_ticket(user, card):
         ticket.seat.save()
         ticket.save()
         # generate tickets
-        generate_ticket(ticket_info(ticket, user.username()))
+        generate_ticket(ticket_info(ticket, user))
 
     cart.delete()
     sendticket(order)
@@ -216,7 +217,8 @@ def sendticket(order):
         print("Error: Failed to send email: CAN NOT attach files")
         return False
 
-def book_ticket_staff(user,amount_payed):
+
+def book_ticket_staff(user, amount_payed):
     """
     Creates a booking payment by cash for an employee. It marks the seat
     as reserved and removes the shopping cart object.
@@ -230,7 +232,6 @@ def book_ticket_staff(user,amount_payed):
         cart = ShoppingCart.objects.get(user=user)
         tickets = cart.ticket.all()
 
-        
         flag = 0  # initial flag
         for ticket in tickets:
             if ticket.seat.status == 'X':  # if any ticket has been already booked
@@ -253,7 +254,7 @@ def book_ticket_staff(user,amount_payed):
             ticket.seat.status = 'X'  # Marking seat as booked
             ticket.seat.save()
             ticket.save()
-            generate_ticket(ticket_info(ticket, user.get_full_name())) # generate tickets
+            generate_ticket(ticket_info(ticket, user))  # generate tickets
 
         cart.delete()
         sendticket(order)
@@ -262,8 +263,9 @@ def book_ticket_staff(user,amount_payed):
     else:
         return -1
 
+
 def get_basket_price(user):
-    #returns the total price of the basket
+    # returns the total price of the basket
     cart = ShoppingCart.objects.get(user=user)
     tickets = cart.ticket.all()
     return sum(ticket.price for ticket in tickets)
@@ -275,8 +277,15 @@ def checkout(request):
     """
     if request.method == 'POST':
         form = CardForm(request.POST)
-        if form.is_valid:
+
+        if form.is_valid():
+            print("valid form")
             card = form.save()
+            try:
+                card.user.add(request.user)
+            except:
+                pass
+            print(card)
             if not book_ticket(request.user, card):
                 messages.error(
                     request, 'Some tickets are unavailable. Please try again.')
@@ -285,45 +294,54 @@ def checkout(request):
             messages.success(
                 request, 'Successfully booked tickets. Check email for your tickets. ')
             return redirect('booking')
+        else:
+            print("invalid checkout form")
+            messages.error(request, "Please retry some valid month / year!")
+            return redirect('checkout')
+
     else:
-        form = CardForm()
-        context = {
-            'form': form,
-            'buttonText': "Pay",
-            'action': "",
-            'title': "Checkout"
-        }
-        return render(request, 'payment/payment.html', context)
-
-
+        # check if the user is verified by email (mailtrap)
+        if request.user.verified():
+            form = CardForm()
+            context = {
+                'form': form,
+                'buttonText': "Pay",
+                'action': "",
+                'title': "Checkout"
+            }
+            return render(request, 'payment/payment.html', context)
+        else:
+            messages.error(
+                request, 'Please verify your account by clicking the link in the email.')
+            return redirect('cart')
 
 
 def pay_by_cash(request):
-    user=request.user
+    user = request.user
     messages.get_messages(request)
     if user.is_staff or user.is_admin or user.is_superuser:
         total_price = get_basket_price(user=user)
         if request.method == 'POST':
-            form=PayByCashForm(request.POST)
-            context ={
-                'action':'',
-                'amount' :total_price,
-                'title':"Pay by cash",
-                'buttonText':'Confirm Payment',
-                'form':form
+            form = PayByCashForm(request.POST)
+            context = {
+                'action': '',
+                'amount': total_price,
+                'title': "Pay by cash",
+                'buttonText': 'Confirm Payment',
+                'form': form
             }
-            return render(request,'payment/pay_by_cash.html', context)
+            return render(request, 'payment/pay_by_cash.html', context)
         else:
-            form=PayByCashForm(request.GET)
-            context ={
-                'action':'',
-                'amount' :total_price,
-                'title':"Pay by cash",
-                'buttonText':'Confirm Payment',
-                'form':form
+            form = PayByCashForm(request.GET)
+            context = {
+                'action': '',
+                'amount': total_price,
+                'title': "Pay by cash",
+                'buttonText': 'Confirm Payment',
+                'form': form
             }
             if form.is_valid():
-                change = book_ticket_staff(user=user,amount_payed=form.cleaned_data['amount_payed'])
+                change = book_ticket_staff(user=user, amount_payed=form.cleaned_data['amount_payed'])
                 if change > 0:
                     messages.info(request, 'The payment has been accepted')
                     messages.info(request, 'The change is' + change)
@@ -339,8 +357,7 @@ def pay_by_cash(request):
                 elif change == -1:
                     messages.error(request, 'The user is not authorised!')
                     return redirect('index')
-            return render(request,'payment/pay_by_cash.html', context)
+            return render(request, 'payment/pay_by_cash.html', context)
     else:
         messages.error(request, 'The user is not authorised!')
         return redirect('index')
-        

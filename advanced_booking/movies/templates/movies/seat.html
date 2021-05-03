@@ -23,11 +23,17 @@
                     <a style="display:block;width: 200px;margin-top: 10px;" class="btn btn-primary" href="/cart" role="button">View
                         Cart</a>
                     {% csrf_token %}
-                    <li style="display: none"> {{ form }}</li>
                     <ul style="display:inline-block">
-                        {% for age in form.ticket_type %}
                         <br>
-                        {{ age }}
+                        {% for x in form %}
+                            {% if x == form.ticket_type %}
+                                {% for b in form.ticket_type %}
+                                {{ b }}
+                                <br>
+                                {% endfor %}
+                            {% else %}
+                            <li style="display: none"> {{ x }} </li>
+                            {% endif %}
                         {% endfor %}
                     </ul>
                 </div>
