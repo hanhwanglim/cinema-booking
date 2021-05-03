@@ -40,7 +40,7 @@ def register(request):
         else:
             context = {
                 'form': RegisterForm(),
-                'error_message': form.errors.as_text()
+                'error_message': form.errors
             }
             return render(request, 'users/register.html', context)
     else:

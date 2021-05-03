@@ -11,6 +11,11 @@
         </div>
         <form method="post">
             {% csrf_token %}
+            {% if error_message %}
+            {% for key, message in error_message.items %}
+            {{ message }}
+            {% endfor %}
+            {% endif %}
             {{ form|crispy }}
             <input id= "subButton" type="submit" value="Submit"class ="button">
         </form>

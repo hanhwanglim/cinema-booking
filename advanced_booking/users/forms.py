@@ -35,12 +35,3 @@ class RegisterForm(UserCreationForm):
                 code='password_mismatch',
             )
         return password2
-    
-    def check_password_length(self):
-        password1 = self.cleaned_data.get("password1")
-        password2 = self.cleaned_data.get("password2")
-        if len(password1) < 8 and len(password2) < 8:
-            raise forms.ValidationError(
-                self.error_messages['short_password'],
-                code='short_password',
-            ) 
