@@ -24,14 +24,20 @@
         <!-- display card formatting-->
         <div class="card-body p-15">
             <h1>Basket</h1>
+            {% if form %}
             <form action="" method="post">
                 <div class="Quickcheckout">
                     {% csrf_token %}
                     {{ form }}
                 </div>
+                {% if amount %}
                 <input type="submit" value="Quick Checkout" class="button">
+                {% else %}
+                <input disabled type="submit" value="Quick Checkout" class="button">
+                {% endif %}
             </form>
             <br>
+            {% endif %}
             <table class="table table-dark" style="width:100%;">
                 <tr>
                     <th>Movie</th>
@@ -70,7 +76,7 @@
             <a href="/checkout" style="display:block;width: 200px;margin-top: 10px;" class="btn btn-primary">
                 Checkout</a>
             {% else %}
-            <a  style="display:block;width: 200px;margin-top: 10px;" class="btn btn-primary">Checkout
+            <a style="display:block;width: 200px;margin-top: 10px;" class="btn btn-primary">Checkout
             </a>
             {% endif %}
             {% endblock %}

@@ -1,12 +1,15 @@
 <title>Home</title>
 {% extends 'movies/base.html' %} {% block content %} {% load static %}
-{% if messages %}
-<ul class="messages">
-    {% for message in messages %}
-    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-    {% endfor %}
-</ul>
-{% endif %}
+{% for message in messages %}
+<div class="container-fluid p-0">
+    <div class="alert {{ message.tags }} alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        {{ message }}
+    </div>
+</div>
+{% endfor %}
 <h1 class="text-center homemovieheader">Top Films</h1>
 {% if movie_list %}
 <ul class="topmovies">
@@ -14,10 +17,10 @@
     <div class="topfilmcontainer">
         <a class="movielinkpost" href="{% url 'movie' movie.id %}">
             <li class="topmovieposter">
-                <img width="100%" class="box"  src="{{ movie.poster.url }}">
+                <img width="100%" class="box" src="{{ movie.poster.url }}">
             </li>
 
-            <p class="topmoviename"><b class = movieName>{{ movie }}</b></p>
+            <p class="topmoviename"><b class=movieName>{{ movie }}</b></p>
         </a>
     </div>
     {% endfor %}
@@ -34,9 +37,9 @@
         <div class="allfilms">
             <a href="{% url 'movie' movie.id %}">
                 <div class="postercontainer">
-                    <img width="100%" class="box"  src="{{ movie.poster.url }}">
+                    <img width="100%" class="box" src="{{ movie.poster.url }}">
                 </div>
-                <p class="moviename"><b class = "movieName">{{ movie }}</b></p>
+                <p class="moviename"><b class="movieName">{{ movie }}</b></p>
             </a>
         </div>
         {% endfor %} {% else %}

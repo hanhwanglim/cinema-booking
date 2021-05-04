@@ -6,20 +6,24 @@
 {% if messages %}
 <ul class="messages">
     {% for message in messages %}
-    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-    {% endfor %}
+    <li{% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+        {% endfor %}
 </ul>
 {% endif %}
 <div class="container">
-    <div class="card border-0 my-5"> <!-- display card formatting-->
-      <div class="card-body p-15">
-        <div class="d-flex justify-content-center">
-			<h1>{{ title }}</h1>
-		</div>
-		<form action="{{ action }}" method="POST">
-			{% csrf_token %}
-            {{ form|crispy }}
-			<br>
-			<button type="submit">{{ buttonText }}</button>
+    <div class="card border-0 my-5">
+        <!-- display card formatting-->
+        <div class="card-body p-15">
+            <div class="d-flex justify-content-center">
+                <h1>{{ title }}</h1>
+            </div>
+            <form action="{{ action }}" method="POST">
+                {% csrf_token %}
+                {{ form|crispy }}
+                <br>
+                <div class="Quickcheckout">
+                    <button type="submit">&nbsp{{ buttonText }}&nbsp</button>
+                </div>
+            </form>
 
-{% endblock %}
+            {% endblock %}
