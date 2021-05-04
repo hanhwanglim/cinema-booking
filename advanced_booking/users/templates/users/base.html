@@ -19,7 +19,7 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
   <link rel="stylesheet" type="text/css" href="{% static 'users/log_reg_main.css' %}">
-  
+
   <title>Cin4D</title>
 </head>
 
@@ -95,10 +95,17 @@
 
           </li>
           <!-- Probobaly should come up with a slightly more elegenat soultion but this works to space them for now -->
+          {% if user.is_staff == 1 %}
+          <li class="nav-item px-lg-2 active">
+            <a class="nav-link" href="/booking"> <span class="d-inline-block d-lg-none icon-width"></span><i
+                class="fas fa-home"></i></span>Kiosk History</a>
+          </li>
+          {% else %}
           <li class="nav-item px-lg-2 active">
             <a class="nav-link" href="/booking"> <span class="d-inline-block d-lg-none icon-width"></span><i
                 class="fas fa-home"></i></span>My Orders</a>
           </li>
+          {% endif %}
           <li class="nav-item px-lg-2"> <a class="nav-link" href="/cart"><span
                 class="d-inline-block d-lg-none icon-width"><i class="fas fa-spa"></i></span>View
               Cart</a> </li>

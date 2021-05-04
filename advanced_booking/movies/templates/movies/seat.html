@@ -20,20 +20,29 @@
         <div class="seatcontainer">
             <div class="cartandkey">
                 <div class="ageandcartselect" style="display: inline-block;">
-                    <a style="display:block;width: 200px;margin-top: 10px;" class="btn btn-primary" href="/cart" role="button">View
+                    {% if staff == True%}
+                    <a style="display:inline-block;width: 200px;margin-top: 10px;" class="btn btn-primary" href="/cart"
+                        role="button">Pay by Card </a>
+                    <a style="display:inline-block;width: 200px;margin-top: 10px;" class="btn btn-primary"
+                        href="/cash_checkout" role="button">Pay by Cash</a>
+
+                    {% else %}
+                    <a style="display:block;width: 200px;margin-top: 10px;" class="btn btn-primary" href="/cart"
+                        role="button">View
                         Cart</a>
+                    {% endif %}
                     {% csrf_token %}
                     <ul style="display:inline-block">
                         <br>
                         {% for x in form %}
-                            {% if x == form.ticket_type %}
-                                {% for b in form.ticket_type %}
-                                {{ b }}
-                                <br>
-                                {% endfor %}
-                            {% else %}
-                            <li style="display: none"> {{ x }} </li>
-                            {% endif %}
+                        {% if x == form.ticket_type %}
+                        {% for b in form.ticket_type %}
+                        {{ b }}
+                        <br>
+                        {% endfor %}
+                        {% else %}
+                        <li style="display: none"> {{ x }} </li>
+                        {% endif %}
                         {% endfor %}
                     </ul>
                 </div>
@@ -65,7 +74,7 @@
 
                 </div>
             </div>
-            <div class = "seatborder">
+            <div class="seatborder">
                 <br>
             </div>
             <div class="seatsdisplay">
@@ -109,20 +118,7 @@
             </div>
 
         </div>
-{#        check if the user is staff#}
-        {% if staff == True%}
-            <div class="modal-footer">
-{#           uncomment below div to align buttons to the left#}
-{#              <div class="modal-body">#}
-                <a style="display:block;width: 200px;margin-top: 10px;" class="btn btn-primary" href="/cart"
-                   role="button">Pay Online </a>
-                <a style="display:block;width: 200px;margin-top: 10px;" class="btn btn-primary" href="/cash_checkout"
-                   role="button">Pay by Cash</a>
-{#              </div>#}
-            </div>
-{#            <input type="submit" name="pay_online" value="Pay Online"></input>#}
-{#            <input type="submit" name="pay_by_cash_button" value="Pay by cash"></input>#}
-        {% endif %}
+        
     </form>
 </div>
 
