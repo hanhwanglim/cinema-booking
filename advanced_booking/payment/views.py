@@ -110,7 +110,7 @@ def cart(request):
         # based on users' saved card info to choose whether show the quick checkout
         if CardDetail.objects.filter(user=current_user).all():
 
-            form = QuickCheckoutForm(request.POST, user=current_user.id)
+            form = QuickCheckoutForm(request.POST, use_required_attribute=False, user=current_user.id, )
             if request.method == 'POST':
                 if form.is_valid():
                     print("QuickCheckoutForm is valid")
@@ -301,7 +301,7 @@ def checkout(request):
 
     else:
         # check if the user is verified by email (mailtrap)
-        if request.user.verified():
+        if request.user.verified:
             form = CardForm()
             context = {
                 'form': form,

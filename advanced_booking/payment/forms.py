@@ -101,7 +101,7 @@ class QuickCheckoutForm(forms.Form):
         if user:
             cards = CardDetail.objects.filter(user=user).all()
             self.fields['card'] = forms.ChoiceField(
-                choices=tuple([(c, c) for c in cards]))
+                choices=tuple([(c, c) for c in cards]), required=False)
 
 
 class PayByCashForm(forms.Form):
