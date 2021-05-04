@@ -21,8 +21,24 @@
                 ['SENIOR', {{ n_senior | safe }}],
             ]);
 
-        var materialChart = new google.charts.Bar(document.getElementById('chart_div'));
-        materialChart.draw(data);
+        var options = {
+            chart: {
+                width: 1200,
+                height: 800
+            },
+
+            vAxis: {
+                title: 'Sales',
+                minValue: 0
+            },
+
+            hAxis: {
+                title: 'Type',
+            }
+        };
+
+        var materialChart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
+        materialChart.draw(data, options);
       }
     </script>
 </head>
@@ -36,5 +52,5 @@
         
     </div>
 </div>
-<h2>Total revenue for {{ movie }}: ${{ revenue }}</h2>
+<h2>Total revenue for {{ movie }}: £{{ revenue }}</h2>
 {% endblock %}
