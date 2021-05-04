@@ -111,8 +111,17 @@
         </div>
 {#        check if the user is staff#}
         {% if staff == True%}
-            <input type="submit" name="pay_online" value="Pay Online"></input>
-            <input type="submit" name="pay_by_cash_button" value="Pay by cash"></input>
+            <div class="modal-footer">
+{#           uncomment below div to align buttons to the left#}
+{#              <div class="modal-body">#}
+                <a style="display:block;width: 200px;margin-top: 10px;" class="btn btn-primary" href="/cart"
+                   role="button">Pay Online </a>
+                <a style="display:block;width: 200px;margin-top: 10px;" class="btn btn-primary" href="/cart"
+                   role="button">Pay by Cash</a>
+{#              </div>#}
+            </div>
+{#            <input type="submit" name="pay_online" value="Pay Online"></input>#}
+{#            <input type="submit" name="pay_by_cash_button" value="Pay by cash"></input>#}
         {% endif %}
     </form>
 </div>
