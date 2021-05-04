@@ -25,15 +25,18 @@
           width: 1200,
           height: 800
         },
+
         vAxis: {
+          title: 'Revenue',
           minValue: 0
         },
           
         hAxis: {
-            viewWindow: {
-                min: {{ format_start_date }},
-                max: {{ format_end_date }}
-            }
+          title: 'Date',
+          viewWindow: {
+            min: {{ format_start_date }},
+            max: {{ format_end_date }}
+          }
         },
       };
 
@@ -41,7 +44,6 @@
         document.getElementById('chart_div'));
 
       chart.draw(data, options);
-    
     }
   </script>
 </head>
@@ -62,7 +64,7 @@
       <div id="chart_div"></div>
     </div>
     
-    <h1>Overall income ${{ overall_income }}</h1>
+    <h1>Overall income since beginning of time £{{ overall_income }}</h1>
 
   </div>
 </div>
