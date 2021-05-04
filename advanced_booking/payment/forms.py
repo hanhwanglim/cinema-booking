@@ -61,7 +61,7 @@ class SelectDatetimeForm(forms.Form):
         if movie_id:
             available_datetime = Showtime.objects.all().filter(movie_id=movie_id)
             self.fields['selected_showtime'] = forms.ChoiceField(
-                choices=tuple([(a_time.id, a_time) for a_time in available_datetime]))
+                    choices=tuple([(a_time.id, a_time.getDateTimeHall()) for a_time in available_datetime]))
 
 
 class SelectSeatForm(forms.Form):

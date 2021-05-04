@@ -48,7 +48,8 @@ def movie(request, movie_id):
 
     return render(request, 'movies/movie.html', context)
 
-def remove_from_cart(request, ticket_id,showtime_id):
+
+def remove_from_cart(request, ticket_id, showtime_id):
     if request.user.is_authenticated:
         current_user = request.user
         # query the cart
@@ -56,11 +57,12 @@ def remove_from_cart(request, ticket_id,showtime_id):
         ticket = Ticket.objects.get(id=ticket_id)
         cart.ticket.remove(ticket)
         cart.save()
-        return redirect(seat,showtime_id)
+        return redirect(seat, showtime_id)
     else:
         messages.error(request, "failed to remove ticket from cart")
         print("Error: failed to remove ticket from cart")
         return redirect('index')
+
 
 def seat(request, showtime_id):
     """
@@ -75,13 +77,12 @@ def seat(request, showtime_id):
         movie = showtime.movie
         hall = showtime.hall
         seats = Seat.objects.all().filter(showtime_id=showtime_id)
+        context['staff'] = request.user.is_staff
 
-        # TODO: add required info for front-end
         context['movie'] = movie
         context['hall'] = hall
         if request.method == 'POST':
             form = SelectSeatForm(request.POST, showtime_id=showtime_id)
-
             if form.is_valid():
                 name = request.POST.get('seats')
                 print(name)
@@ -96,15 +97,14 @@ def seat(request, showtime_id):
                     print("successfully created a ticket and added to cart")
                     messages.success(request, "successfully added your chosen ticket to the cart.")
                     add_to_cart(request, name, showtime_id, ticket_type)
-                    
-                    # return redirect(add_to_cart, seat_id=name, showtime_id=showtime_id,
-                    #                 ticket_type=ticket_type)
-                    if  'pay_by_cash_button' in request.POST:
+                    print("User is a staff:" + str(context['staff']))
+                    if 'pay_by_cash_button' in request.POST:
                         return redirect('pay_by_cash')
                     if 'pay_online' in request.POST:
                         return redirect('cart')
                     return redirect('seat', showtime_id=showtime_id)
                 else:
+                    messages.error("form not valid!")
                     print("Error: form not valid!")
                     return redirect('index')
             else:
@@ -132,14 +132,14 @@ def seat(request, showtime_id):
             for x in seats:
                 for y in tickets:
                     if (y.seat.id == x.id):
-                        print(str(y.seat.id) + " " + str(x.id))
+                        # print(str(y.seat.id) + " " + str(x.id))
                         flag = 1
                         y.seat.status = '*'
                         view_tickets.append(y.seat)
 
                 if (flag == 0):
                     view_tickets.append(x)
-                    print( " " + str(x.id))
+                    # print( " " + str(x.id))
 
                 else:
                     flag = 0
@@ -151,7 +151,7 @@ def seat(request, showtime_id):
             context['seatlist'] = view_tickets
             context['tickets'] = tickets
             context['showtime_id'] = showtime_id
-    #FIXME: for paying by cash
+    # FIXME: for paying by cash
     # action=request.GET['button']
     # if action== "Pay by cash":
     #     context['action']="url 'pay_by_cash'"

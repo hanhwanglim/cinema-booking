@@ -44,6 +44,11 @@ class Showtime(models.Model):
         # FIXME: Can't align when the movie name contains brackets
         # return f" {str(self.movie):-<40} {formatted_time:-<30} {str(self.hall)}"
 
+    # showing only datetime and halls when choosing the dateTime for a movie
+    def getDateTimeHall(self):
+        formatted_time = self.time.strftime("%d %B, %Y  %I:%M%p")
+        return f' {formatted_time} ({self.hall})'
+
 
 class Seat(models.Model):
     SEAT_STATUS = [

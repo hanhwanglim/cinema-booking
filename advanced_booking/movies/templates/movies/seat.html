@@ -109,9 +109,11 @@
             </div>
 
         </div>
-
-        <input type="submit" name="pay_online" value="Pay Online"></input>
-        <input type="submit" name="pay_by_cash_button" value="Pay by cash"></input>
+{#        check if the user is staff#}
+        {% if staff == True%}
+            <input type="submit" name="pay_online" value="Pay Online"></input>
+            <input type="submit" name="pay_by_cash_button" value="Pay by cash"></input>
+        {% endif %}
     </form>
 </div>
 
