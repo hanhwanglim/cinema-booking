@@ -344,7 +344,7 @@ def pay_by_cash(request):
                 change = book_ticket_staff(user=user, amount_payed=form.cleaned_data['amount_payed'])
                 if change > 0:
                     messages.info(request, 'The payment has been accepted')
-                    messages.info(request, 'The change is' + change)
+                    messages.info(request, 'The change is' + str(change))
                     return redirect('index')
                 elif change == 0:
                     messages.info(request, 'The payment has been accepted')
