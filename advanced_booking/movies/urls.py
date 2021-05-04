@@ -1,5 +1,6 @@
-from django.urls import path
-
+from django.urls import path,include
+from django.conf import settings
+from django.conf.urls.static import static
 from . import views
 
 urlpatterns = [
@@ -11,3 +12,6 @@ urlpatterns = [
     path('seat', views.seat, name='seat'),
     path('remove_ticket/<int:showtime_id>/ticket<int:ticket_id>',views.remove_from_cart, name = 'remove_from_cart')
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

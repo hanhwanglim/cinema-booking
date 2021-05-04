@@ -14,7 +14,7 @@
     <div class="topfilmcontainer">
         <a class="movielinkpost" href="{% url 'movie' movie.id %}">
             <li class="topmovieposter">
-                <img width="100%" class="box" src="{% static 'movies/' %}{{ movie.id }}.jpg">
+                <img width="100%" class="box"  src="{{ movie.poster.url }}">
             </li>
 
             <p class="topmoviename"><b class = movieName>{{ movie }}</b></p>
@@ -34,7 +34,7 @@
         <div class="allfilms">
             <a href="{% url 'movie' movie.id %}">
                 <div class="postercontainer">
-                    <img  class="poster" src="{% static 'movies/' %}{{ movie.id }}.jpg">
+                    <img width="100%" class="box"  src="{{ movie.poster.url }}">
                 </div>
                 <p class="moviename"><b class = "movieName">{{ movie }}</b></p>
             </a>

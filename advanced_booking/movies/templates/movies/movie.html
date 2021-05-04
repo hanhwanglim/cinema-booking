@@ -18,7 +18,7 @@
 <div class="container">
     <div class="row">
         <div class="col-lg-6">
-            <img width="600px" height="100%" src="{% static 'movies/' %}{{ movie.id }}.jpg">
+            <img width="600px" height="100%"  src="{{ movie.poster.url }}">
         </div>
         <div class="col-lg-6">
             <div class="row">
